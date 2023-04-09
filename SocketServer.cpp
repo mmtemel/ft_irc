@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:54:03 by mtemel            #+#    #+#             */
-/*   Updated: 2023/04/08 19:22:19 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/04/09 19:04:34 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,54 @@
 
 #define PORT 9909
 
+struct sockaddr_in srv;
+int nsocket;
+fd_set fr, fw, fe;
+int nArrClient[5];
+
+void processTheNewRequest()
+{
+	//New connection request
+	if (FD_ISSET(nsocket, &fr))
+	{
+		socklen_t nLen = sizeof(struct sockaddr);
+		int nClientSocket = accept(nsocket, NULL, &nLen);
+		if (nClientSocket > 0)
+		{
+			size_t i;
+			for (i = 0; i < 5; i++)
+			{
+				nArrClient[i] = nClientSocket;
+				send(nClientSocket, "Connection done successfully", 255, 0);
+				break;
+			}
+			if (i == 5)
+				std::cout<<"No space for a new connection"<<std::endl;
+		}
+		else
+		{
+			for (size_t i = 0; i < 5; i++)
+			{
+				if (FD_ISSET(nArrClient[i], &fr))
+				{
+					//got the new message from the client
+					//just recv new message
+					//just queue that for new works of server to fulfill the req
+				}
+			}
+			
+		}
+	}
+}
+
 int main(int argc, char **argv)
 {
 	(void)argc;
 	(void)argv;
-	struct sockaddr_in srv;
-	fd_set fr, fw, fe;
 	int nRet;
 
 	//initialize the socket
-	int nsocket = socket(AF_INET, SOCK_STREAM, 0);
+	nsocket = socket(AF_INET, SOCK_STREAM, 0);
 	std::cout << "socket fd: "<< nsocket << std::endl;
 	if(nsocket < 0)
 		std::cout << "\033[1;31mSocket initialization failed!\033[0m" << std::endl;
@@ -91,6 +129,16 @@ int main(int argc, char **argv)
 		FD_SET(nsocket, &fr);
 		FD_SET(nsocket, &fe);
 
+		for (size_t i = 0; i < 5; i++)
+		{
+			if(nArrClient[i] != 0)
+			{
+				FD_SET(nArrClient[i], &fr);
+				FD_SET(nArrClient[i], &fe);
+			}
+		}
+		
+
 		// std::cout << "Before select call:" << fr.fds_bits << std::endl;
 
 		//Keep waiting for new requests and proceed as per the request
@@ -99,12 +147,13 @@ int main(int argc, char **argv)
 		{
 			//when someone connects or communicate with a message over a dedicated connection
 			std::cout << "\033[1;32mSome client on port!\033[0m" << std::endl;
-			if (FD_ISSET(nsocket, &fe))
-				std::cout << "\033[1;33mThere is an exception!\033[0m" << std::endl;
-			else if (FD_ISSET(nsocket, &fw))
-				std::cout << "\033[1;34mReady to write something!\033[0m" << std::endl;
-			else if (FD_ISSET(nsocket, &fr))
-				std::cout << "\033[1;35mReady to read. Something new came up at the port!\033[0m" << std::endl;
+			// if (FD_ISSET(nsocket, &fe))
+			// 	std::cout << "\033[1;33mThere is an exception!\033[0m" << std::endl;
+			// else if (FD_ISSET(nsocket, &fw))
+			// 	std::cout << "\033[1;34mReady to write something!\033[0m" << std::endl;
+			// else if (FD_ISSET(nsocket, &fr))
+			// 	std::cout << "\033[1;35mReady to read. Something new came up at the port!\033[0m" << std::endl;
+			processTheNewRequest();
 		}
 		else if(nRet == 0)
 		{
