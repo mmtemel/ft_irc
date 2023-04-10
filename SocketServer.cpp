@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:54:03 by mtemel            #+#    #+#             */
-/*   Updated: 2023/04/09 19:04:34 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/04/10 17:07:16 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,42 @@ int nsocket;
 fd_set fr, fw, fe;
 int nArrClient[5];
 
+void ProcessNewMessage(int nClientSocket)
+{
+	std::cout << "\033[1;37mProcessing the new message for client socket: \033[0m";
+	std::cout << nClientSocket << std::endl;
+	char buff[256 + 1] = {0,};
+	int nRet = recv(nClientSocket, buff, 256, 0);
+	if (nRet < 0)
+	{
+		std::cout << "\033[1;31mSomething wrong happened!";
+		std::cout << "Closing the connection for the client!";
+		std::cout << "Client socket: \033[0m" << nClientSocket << std::endl;
+		close(nClientSocket);
+		for (size_t i = 0; i < 5; i++)
+		{
+			if (nArrClient[i] == nClientSocket)
+			{
+				nArrClient[i] = 0;
+				break;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "\033[1;30mThe message received from client is: \033[0m";
+		std::cout << buff << std::endl;
+		//send the response to client
+		send(nClientSocket, "Processed your request", 23, 0);
+		std::cout << "**************************************" << std::endl;
+	}
+	
+}
+
 void processTheNewRequest()
 {
 	//New connection request
+	std::cout << "process the new request" << std::endl;
 	if (FD_ISSET(nsocket, &fr))
 	{
 		socklen_t nLen = sizeof(struct sockaddr);
@@ -39,7 +72,7 @@ void processTheNewRequest()
 			for (i = 0; i < 5; i++)
 			{
 				nArrClient[i] = nClientSocket;
-				send(nClientSocket, "Connection done successfully", 255, 0);
+				send(nClientSocket, "Connection done successfully! (message from server)", 255, 0);
 				break;
 			}
 			if (i == 5)
@@ -54,6 +87,7 @@ void processTheNewRequest()
 					//got the new message from the client
 					//just recv new message
 					//just queue that for new works of server to fulfill the req
+					ProcessNewMessage(nArrClient[i]);
 				}
 			}
 			
@@ -78,8 +112,8 @@ int main(int argc, char **argv)
 	//initialize the environment for sockaddr structure
 	srv.sin_family = AF_INET;
 	srv.sin_port = htons(PORT);
-	// srv.sin_addr.s_addr = INADDR_ANY;
-	srv.sin_addr.s_addr = inet_addr("127.0.0.1");
+	srv.sin_addr.s_addr = INADDR_ANY;
+	// srv.sin_addr.s_addr = inet_addr("127.0.0.1");
 	memset(&(srv.sin_zero), 0, 8);
 
 	//about the blocking vs non-blocking sockets
@@ -146,7 +180,7 @@ int main(int argc, char **argv)
 		if(nRet > 0)
 		{
 			//when someone connects or communicate with a message over a dedicated connection
-			std::cout << "\033[1;32mSome client on port!\033[0m" << std::endl;
+			std::cout << "\033[1;32mSome client on port: \033[0m" << PORT <<std::endl;
 			// if (FD_ISSET(nsocket, &fe))
 			// 	std::cout << "\033[1;33mThere is an exception!\033[0m" << std::endl;
 			// else if (FD_ISSET(nsocket, &fw))
@@ -158,7 +192,7 @@ int main(int argc, char **argv)
 		else if(nRet == 0)
 		{
 			//no connection or any communication request made or none of the socket descriptors ar ready
-			std::cout << "Nothing on port: "<<PORT<<std::endl;
+			// std::cout << "Nothing on port: "<< PORT <<std::endl;
 		}
 		else
 		{
@@ -168,5 +202,4 @@ int main(int argc, char **argv)
 		// std::cout << "After select call:" << fr.fds_bits << std::endl;
 		sleep(2);
 	}
-
 }

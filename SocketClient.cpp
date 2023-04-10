@@ -6,11 +6,12 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 18:42:31 by mtemel            #+#    #+#             */
-/*   Updated: 2023/04/09 18:53:38 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/04/10 17:04:52 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <iomanip>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -53,10 +54,23 @@ int main(int argc, char **argv)
 	{
 		std::cout << "\033[1;32mconnection succeeded!\033[0m" << std::endl;
 		char buff[255] = {0,};
+		std::string line;
 		recv(nClientSocket, buff, 255, 0);
 		std::cout << "Press any key to see the received message from server:";
-		getchar();
+		std::getchar(); //getchar();
 		std::cout << "\033[1;36m" << buff << "\033[0m" << std::endl;
+		
+		//latest part
+		std::cout << "\033[1;33mNow send your message:" <<std::endl;
+		while(1)
+		{
+			std::getline(std::cin, line); //fgets(buff, 255, stdin);
+			send(nClientSocket, (const char*)(line.c_str()), 255, 0);
+			std::cout << "Press any key to see the received message from server:";
+			getchar();
+			std::cout << "\033[1;36m" << buff << "\033[0m" << std::endl;
+			std::cout << "\033[1;34mNow send your next message: \033[0m" << std::endl;
+		}
 	}
 
 
