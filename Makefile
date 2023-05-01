@@ -6,14 +6,14 @@
 #    By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/05 13:07:52 by mtemel            #+#    #+#              #
-#    Updated: 2023/04/21 22:41:01 by mtemel           ###   ########.fr        #
+#    Updated: 2023/05/01 23:41:07 by mtemel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98 #-Wno-shadow #-Wshadow
-SRCS = showip.cpp
+FLAGS = -Wall -Wextra -Werror -std=c++98
+SRCS = $(wildcard ./srcs/*.cpp)
 OBJS = $(SRCS:.cpp = .o)
 
 $(NAME): $(OBJS)
