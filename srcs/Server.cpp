@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/02 01:04:09 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/02 14:55:09 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void  Server::appointment(int argc, char **argv)
 {
 	if (argc != 3)
 	{
-		std::cerr << "Arg Error." << std::endl;
+		std::cerr << "Usage: ./ircserv <port number> <password>" << std::endl;
 		exit(1);
 	}
 	this->my_port = std::atoi(argv[1]);
@@ -98,7 +98,6 @@ void	Server::loop()
 				this->executeCommand(this->pollfds[i].fd);
 			}
 		}
-		std::cout << "The nick: " << this->my_nick << std::endl;
 	}
 }
 
@@ -118,6 +117,7 @@ void	Server::newClient()
 	it = this->cap_ls.begin();
 	while (it != this->cap_ls.end())
 	{
+		// std::cout << "The nick: " << this->my_nick << std::endl;
 		std::string str = "/";
 		str += it->second += "\r\n";
 		send(this->new_socket, str.c_str(), str.size(), 0);
@@ -148,11 +148,13 @@ void	Server::executeCommand(int fd)
 				command += this->buffer[i++]; //first ->command
 			while (i < this->buffer.size() && (this->buffer[i] == ' ' || this->buffer[i] == '\r' || this->buffer[i] == '\n'))
 				i++;
-			while (i < this->buffer.size() && (this->buffer[i] != ' ' && this->buffer[i] != '\r' && this->buffer[i] != '\n'))
-				args += this->buffer[i++]; //second ->arg
-			while (i < this->buffer.size() && (this->buffer[i] == ' ' || this->buffer[i] == '\r' || this->buffer[i] == '\n'))
-				i++;
-			parser(command, args);
+			while (i < this->buffer.size())
+				args += this->buffer[i++]; //the line ->arg
+			// while (i < this->buffer.size() && (this->buffer[i] != ' ' && this->buffer[i] != '\r' && this->buffer[i] != '\n'))
+			// 	args += this->buffer[i++]; //second ->arg
+			// while (i < this->buffer.size() && (this->buffer[i] == ' ' || this->buffer[i] == '\r' || this->buffer[i] == '\n'))
+			// 	i++;
+			this->parser(command, args);
 			this->buffer.erase(0, i);
 		}
 	}
@@ -167,15 +169,13 @@ void	Server::parser(std::string command, std::string args)
 		this->my_nick = args; //nothing in the beginning
 		this->nick(*this, args);
 	}
-	// else if (command == "QUIT")
-	// 	exit(1);
 	if (!strncmp(this->cap_ls[0].c_str(), command.c_str(), 3))
 		this->add(*this, args);
 	if (!strncmp(this->cap_ls[2].c_str(), command.c_str(), 4))
 		this->join(*this, args);
 	if (!strncmp(this->cap_ls[3].c_str(), command.c_str(), 4))
 		this->quit(*this, args);
-	if (!strncmp(this->cap_ls[4].c_str(), command.c_str(), 3))
+	if (command == "CAP")
 		this->cap(*this, args);
 }
 
@@ -183,7 +183,28 @@ void	Server::parser(std::string command, std::string args)
 void Server::cap(Server &server, std::string line)
 {
 	(void)server;
-	(void)line; // protected our segmentation fault.
+	std::vector<std::string> commands;
+
+	unsigned int i = 0;
+	while (i < line.size())
+	{
+		std::string command = "";
+		std::string args = "";
+		while (i < line.size() && (line[i] != ' ' && line[i] != '\r' && line[i] != '\n'))
+			command += line[i++]; //first ->command
+		while (i < line.size() && (line[i] == ' ' || line[i] == '\r' || line[i] == '\n'))
+			i++;
+		commands.push_back(command);
+		std::cout << "\033[1;95mAfter while cap!\033[0m" << std::endl;
+	}
+	i = -1;
+	while (++i < commands.size())
+	{
+		std::cout << "\033[1;95m" << commands[i] << "\033[0m" << std::endl;
+		if(commands[i] == "USER" || commands[i] == "NICK")
+			this->parser(commands[i], commands[i+1]);
+	}
+	
 }
 
 void Server::add(Server &server, std::string line)
@@ -208,15 +229,20 @@ void Server::add(Server &server, std::string line)
 void Server::nick(Server &server, std::string str)
 {
 	(void)server;
+	unsigned int i = 0;
+	std::string command = "";
+	while (i < str.size() && (str[i] != ' ' && str[i] != '\r' && str[i] != '\n'))
+		command +=str[i++]; //first ->command
+	str.clear();
 	/* :yasin!localhost NICK :ali */
-	std::string b = ":" + this->old_nick + "!localhost NICK " + str + "\r\n";
+	std::string b = ":" + this->old_nick + "!localhost NICK " + command + "\r\n";
 	// std::string b = ":" + str +"!localhost NICK " + "mtemel" + "\r\n";
 	// std::string b = "NICK " + str + "\r\n";
-	std::cout << "string to send: " << b << "to: " << this->new_socket << " old nick: " << this->old_nick << std::endl;
+	std::cout << "string to send: " << b << "to: " << this->new_socket << ", old nick: " << this->old_nick << std::endl;
 	send(this->new_socket, b.c_str(), b.size(), 0);
 	this->old_nick.clear();
-	this->old_nick = str;
-	str.clear();
+	this->old_nick = command;
+	command.clear();
 }
 
 void Server::join(Server &server, std::string line)
@@ -228,7 +254,8 @@ void Server::join(Server &server, std::string line)
 
 	/*  -> Join the channel.
 	say the username is yasin hostname is localhost what would be the join commands reply*/
-	std::string a = ":ali!localhost JOIN " + line + "\r\n";
+	std::string a = ":"+ this->my_nick +"!localhost JOIN " + line + "\r\n";
+	std::cout << "string to send: " << a << "to: " << this->new_socket << ", old nick: " << this->old_nick << std::endl;
 	send(this->new_socket, a.c_str(), a.size(), 0);
 	while (std::getline(iss, token, ' ')) // Space parsing
 		tokens.push_back(token);
