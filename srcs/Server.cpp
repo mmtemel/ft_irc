@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/02 14:55:09 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/02 16:11:57 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,6 @@ void	Server::parser(std::string command, std::string args)
 		std::cout << "Args: " <<"*" << args << "*" << std::endl;
 	if (command == "NICK")
 	{
-		this->my_nick = args; //nothing in the beginning
 		this->nick(*this, args);
 	}
 	if (!strncmp(this->cap_ls[0].c_str(), command.c_str(), 3))
@@ -234,6 +233,7 @@ void Server::nick(Server &server, std::string str)
 	while (i < str.size() && (str[i] != ' ' && str[i] != '\r' && str[i] != '\n'))
 		command +=str[i++]; //first ->command
 	str.clear();
+	this->my_nick = command;
 	/* :yasin!localhost NICK :ali */
 	std::string b = ":" + this->old_nick + "!localhost NICK " + command + "\r\n";
 	// std::string b = ":" + str +"!localhost NICK " + "mtemel" + "\r\n";
@@ -247,20 +247,36 @@ void Server::nick(Server &server, std::string str)
 
 void Server::join(Server &server, std::string line)
 {
+	std::cout << "join line : *" << line << "*" << std::endl;
 	(void)server;
-	std::vector<std::string> tokens;
-	std::istringstream iss(line);
-	std::string token;
-
-	/*  -> Join the channel.
-	say the username is yasin hostname is localhost what would be the join commands reply*/
-	std::string a = ":"+ this->my_nick +"!localhost JOIN " + line + "\r\n";
-	std::cout << "string to send: " << a << "to: " << this->new_socket << ", old nick: " << this->old_nick << std::endl;
-	send(this->new_socket, a.c_str(), a.size(), 0);
-	while (std::getline(iss, token, ' ')) // Space parsing
-		tokens.push_back(token);
-	if (tokens.size() <= 1)
-		return;
+	std::vector<std::string> commands;
+	unsigned int i = 0;
+	while (i < line.size())
+	{
+		std::string command = "";
+		while (i < line.size() && (line[i] != ' ' && line[i] != '\r' && line[i] != '\n'))
+			command += line[i++]; //first ->command
+		while (i < line.size() && (line[i] == ' ' || line[i] == '\r' || line[i] == '\n'))
+			i++;
+		commands.push_back(command);
+		// std::cout << "\033[1;95mAfter while cap!\033[0m" << std::endl;
+	}
+	i = -1;
+	std::cout << "command size: " << commands.size() << std::endl;
+	while (++i < commands.size())
+	{
+		std::cout << "\033[1;95m" << commands[i] << "\033[0m" << std::endl;
+		if(commands[i][0] != '#' &&	commands[i][0] != '&')
+		{
+			std::cout << "\033[1;91m" << "Channel name error: " << commands[i] <<"! Must start with '#' or '&'. Try #"<< commands[i] << "\033[0m" << std::endl;
+			continue;
+		}
+		commands[i] = commands[i].substr(1, commands[i].size() - 1);
+		std::string a = ":"+ this->my_nick +"!localhost JOIN " + commands[i] + "\r\n";
+		std::cout << "string to send: " << a << "to: " << this->new_socket << ", old nick: " << this->old_nick << std::endl;
+		send(this->new_socket, a.c_str(), a.size(), 0);
+	}
+	commands.clear();
 }
 
 void Server::quit(Server &server, std::string str)
