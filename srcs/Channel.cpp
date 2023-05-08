@@ -12,12 +12,8 @@ std::string Channel::getchannelName()
 	return (this->channelName);
 }
 
-std::string Channel::getchannelAdmin()
+Client Channel::getchannelAdmin()
 {
-	return (this->channelAdmin);
+	std::vector<Client>::iterator it = this->channelClients.begin();
+	return(*it);
 }
-
-// void Channel::doAdmin()
-// {
-
-// }

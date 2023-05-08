@@ -14,7 +14,7 @@ void	Server::executeCommand(int fd)
 			std::cout << "Received message: *" << buff << "* from fd: *" << fd << "*" << std::endl;
 		if (bytes_received < 0)
 		{
-			std::cerr << "Receive ended" << std::endl;
+			std::cerr << "\033[1;94mReceive ended\033[0m" << std::endl;
 			return ;
 		}
 		buffer = std::string(buff);

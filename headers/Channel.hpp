@@ -11,20 +11,18 @@ class Channel
 	private:
 		int clientCount;
 		std::string channelName;
-		std::string channelAdmin;
-		//std::string	k;
-		//int l;
-		//bool n;
+		
 	public:
 		Channel(std::string channelName);
 		~Channel();
-		//Client channelAdmin;
-		//std::vector<Client> channelClients;
-		//Client getAdmin();
+		std::vector<Client> channelClients;
+
+		Client getAdmin();
+		void setAdmin(Channel);
 
 		//int getchannelCount();
 		void doAdmin();
-		std::string getchannelAdmin();
+		Client getchannelAdmin();
 		std::string getchannelName();
 };
 

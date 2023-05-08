@@ -20,7 +20,7 @@ void Server::ping(Server &server, std::string buffer, int fd)
 		privmsg(server, buffer, fd);
 	else
 	{
-		std::string b = ":" + this->temp_nick + "!localhost PONG " + my_vec[1] + "\r\n";
+		std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost PONG " + my_vec[0] + "\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 	}
 }

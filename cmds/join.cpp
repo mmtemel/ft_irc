@@ -4,6 +4,7 @@
 
 void Server::join(Server &server, std::string buffer, int fd)
 {
+	std::cout<<"join func buffer: *"<<buffer<<"*"<<std::endl;
 	std::vector<std::string> my_vec;
 	std::string command = "";
 	int i = 0;
@@ -16,38 +17,41 @@ void Server::join(Server &server, std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	i = -1;
-	while (my_vec.size() > ++i)
+	if (my_vec[0][0] != '#' && my_vec[0][0] != '&')
 	{
-		if (my_vec[i][0] != '#' && my_vec[i][0] != '&')
+		std::cerr << "\033[1;91mWrong channel name, must start with '&' or '#'!\033[0m" << std::endl;
+	}
+	else
+	{
+		my_vec[0] = my_vec[0].substr(1, my_vec[0].size() - 1);
+		unsigned int j = 0;
+		while (j < this->channels_.size())
 		{
-			std::cerr << "\033[1;91mError couldn't connect the channel..\033[0m" << std::endl;
-			continue;
-		}
-		my_vec[i] = my_vec[i].substr(1, my_vec[i].size() - 1);
-		int j = -1;
-		while (++j < this->channels_.size())
-		{
-			if (this->channels_[j].getchannelName() == my_vec[i])
+			if (this->channels_[j].getchannelName() == my_vec[0])
 			{
 				// 2 farklı kullanıcı aynı kanala katılamıyor.
-				std::cerr << "\033[1;91mThis channel is already exist:\033[0m" << my_vec[i] << std::endl;
+				std::cerr << "\033[1;91mThis channel is already exist:\033[0m" << my_vec[0] << std::endl;
+				std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
+				send(fd, b.c_str(), b.size(), 0);
+				b.clear();
 				break;
 			}
+			j++;
 		}
 		if (j == this->channels_.size())
 		{
-			Channel c(my_vec[i]);
+			Channel c(my_vec[0]);
 			this->channels_.push_back(c);
-			// if there is just one person you have to admin this channel
-			// if (this->channels_.size() == 1)
-			// {
-			// 	c.doAdmin();
-			// }
 		}
-		std::string b = ":" + this->temp_nick + "!localhost JOIN " + my_vec[i] + "\r\n";
-		send(this->new_socket, b.c_str(), b.size(), 0);
-		b.clear();
+		else
+		{
+			std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
+			send(fd, b.c_str(), b.size(), 0);
+			b.clear();
+			b = ":" + this->client_ret(fd)->getNickName() + "!localhost NAMES " + my_vec[0] + "\r\n";
+			send(fd, b.c_str(), b.size(), 0);
+			b.clear();
+		}
 	}
 	std::cerr << "\033[1;96mNumber of channel:\033[0m" << this->channels_.size() << std::endl;
 	buffer.clear();
