@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/11 19:57:32 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/11 20:10:16 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	Server::newClient()
 	{
 		this->pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
 
-		std::map<int, std::string>::iterator it;
-		it = cap_ls.begin();
+		// std::map<int, std::string>::iterator it;
+		// it = cap_ls.begin();
 		// std::string str ;
 		// while (it != cap_ls.end())
 		// {
