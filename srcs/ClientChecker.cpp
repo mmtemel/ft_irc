@@ -14,26 +14,26 @@ int Server::client_nick_check(std::string nickname)
 	return(0);
 }
 
-Client *Server::client_ret(std::string nickname)
+int Server::client_ret(std::string nickname)
 {
 	std::vector<Client>::iterator it = this->clients_.begin();
 	std::vector<Client>::iterator ite = this->clients_.end();
-	for (; it != ite; it++)
+	for (int i = 0; it != ite; it++, i++)
 	{
 		if(it->getNickName() == nickname)
-			return (&(*it));
+			return (i);
 	}
-	return nullptr;
+	return (-1);
 }
 
-Client *Server::client_ret(int fd)
+int Server::client_ret(int fd)
 {
 	std::vector<Client>::iterator it = this->clients_.begin();
 	std::vector<Client>::iterator ite = this->clients_.end();
-	for (; it != ite; it++)
+	for (int i = 0; it != ite; it++, i++)
 	{
 		if(it->getFd() == fd)
-			return (&(*it));
+			return (i);
 	}
-	return nullptr;
+	return (-1);
 }

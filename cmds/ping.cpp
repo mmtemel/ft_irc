@@ -2,11 +2,11 @@
 #include "../headers/Client.hpp"
 #include "../headers/Channel.hpp"
 
-void Server::ping(Server &server, std::string buffer, int fd)
+void Server::ping(std::string buffer, int fd)
 {
 	std::vector<std::string> my_vec;
 	std::string command = "";
-	int i = 0;
+	unsigned int i = 0;
 	while (buffer.size() > i)
 	{
 		std::string command = "";
@@ -17,10 +17,10 @@ void Server::ping(Server &server, std::string buffer, int fd)
 		my_vec.push_back(command);
 	}
 	if (my_vec.size() != 1) // it's not just /ping , have to go privmsg.
-		privmsg(server, buffer, fd);
+		privmsg(buffer, fd);
 	else
 	{
-		std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost PONG " + my_vec[0] + "\r\n";
+		std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost PONG " + my_vec[0] + "\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 	}
 }

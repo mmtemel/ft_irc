@@ -2,12 +2,12 @@
 #include "../headers/Client.hpp"
 #include "../headers/Channel.hpp"
 
-void Server::quit(Server &server, std::string str, int fd)
+void Server::quit(std::string str, int fd)
 {
 	if(this->client_ret(fd))
 	{
-		int i = 0;
-		std::cout <<"\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m";
+		unsigned int i = 0;
+		std::cout <<"\033[1;91m" << this->clients_[this->client_ret(fd)].getNickName() << " is leaving with message\033[0m";
 		std::string command = "";
 		while (i < str.size() && (str[i] != '\r' && str[i] != '\n'))
 			command += str[i++];

@@ -2,12 +2,12 @@
 #include "../headers/Client.hpp"
 #include "../headers/Channel.hpp"
 
-void Server::join(Server &server, std::string buffer, int fd)
+void Server::join(std::string buffer, int fd)
 {
 	std::cout<<"join func buffer: *"<<buffer<<"*"<<std::endl;
 	std::vector<std::string> my_vec;
 	std::string command = "";
-	int i = 0;
+	unsigned int i = 0;
 	while (buffer.size() > i)
 	{
 		std::string command = "";
@@ -31,7 +31,7 @@ void Server::join(Server &server, std::string buffer, int fd)
 			{
 				// 2 farklı kullanıcı aynı kanala katılamıyor.
 				std::cerr << "\033[1;91mThis channel is already exist:\033[0m" << my_vec[0] << std::endl;
-				std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
+				std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
 				send(fd, b.c_str(), b.size(), 0);
 				b.clear();
 				break;
@@ -45,11 +45,9 @@ void Server::join(Server &server, std::string buffer, int fd)
 		}
 		else
 		{
-			std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
-			send(fd, b.c_str(), b.size(), 0);
-			b.clear();
-			b = ":" + this->client_ret(fd)->getNickName() + "!localhost NAMES " + my_vec[0] + "\r\n";
-			send(fd, b.c_str(), b.size(), 0);
+			std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
+			this->write_send(fd, b);
+			// send(fd, b.c_str(), b.size(), 0);
 			b.clear();
 		}
 	}

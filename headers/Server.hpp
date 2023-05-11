@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+#include <stdlib.h>
 #include <sstream>
 #include <cstring>
 #include <iostream>
@@ -59,21 +60,23 @@ class Server
 		int	getmyport();
 		std::string	getmypassword();
 
-		void cap(Server &server, std::string, int);
-		void join(Server &server, std::string, int);
-		void quit(Server &server, std::string, int);
-		void ping(Server &server, std::string, int);
-		void privmsg(Server &server, std::string, int);
+		void cap(std::string, int);
+		void join(std::string, int);
+		void quit(std::string, int);
+		void ping(std::string, int);
+		void privmsg(std::string, int);
 
 		void nick_change(std::string, std::string, int);
 		void nick_first(std::string, std::string, int);
 
 		int client_nick_check(std::string nickname);
-		Client *client_ret(std::string nickname);
-		Client *client_ret(int fd);
+		int client_ret(std::string nickname);
+		int client_ret(int fd);
 
 		int getNick_first() {return this->is_nick_first; };
 		void setNick_first(int is) {this->is_nick_first = is; };
+
+		void write_send(int fd, std::string message);
 };
 
 #endif

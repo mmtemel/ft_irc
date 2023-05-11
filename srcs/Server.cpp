@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/08 13:58:45 by ysensoy          ###   ########.fr       */
+/*   Updated: 2023/05/11 19:00:19 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void  Server::appointment(int argc, char **argv)
 		std::cerr << "Arg Error." << std::endl;
 		exit(1);
 	}
-	this->my_port = std::stoi(argv[1]);
+	this->my_port = std::atoi(argv[1]);
 	this->my_password = argv[2];
 }
 

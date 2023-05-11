@@ -2,11 +2,11 @@
 #include "../headers/Client.hpp"
 #include "../headers/Channel.hpp"
 
-void Server::privmsg(Server& server, std::string buffer, int fd)
+void Server::privmsg(std::string buffer, int fd)
 {
 	std::vector<std::string> my_vec;
 	std::string command = "";
-	int i = 0;
+	unsigned int i = 0;
 	while (buffer.size() > i)
 	{
 		std::string command = "";
@@ -32,7 +32,7 @@ void Server::privmsg(Server& server, std::string buffer, int fd)
 	}
 	else
 	{
-		std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost PONG " + my_vec[2] + "\r\n";
+		std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost PONG " + my_vec[2] + "\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 	}
 }

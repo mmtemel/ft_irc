@@ -11,14 +11,14 @@ void	Server::executeCommand(int fd)
 		memset(buff, 0, BUFFER_SIZE);
 		int bytes_received = recv(fd, buff, BUFFER_SIZE, 0);
 		if(buff[0] > 31)
-			std::cout << "Received message: *" << buff << "* from fd: *" << fd << "*" << std::endl;
+			std::cout << "\033[1;94mReceived message: *" << buff << "*\nFrom fd: *" << fd << "*\033[0m" << std::endl;
 		if (bytes_received < 0)
 		{
 			std::cerr << "\033[1;94mReceive ended\033[0m" << std::endl;
 			return ;
 		}
 		buffer = std::string(buff);
-		int i = 0;
+		unsigned int i = 0;
 		while (i < buffer.size())
 		{
 			std::string command = "";
@@ -49,15 +49,15 @@ void	Server::executable(std::string command, std::string args, int fd)
 			this->nick_change(command, args, fd);
 	}
 	if (command == "JOIN")
-		join(*this, args, fd);
+		join(args, fd);
 	if (command == "QUIT")
-		quit(*this, args, fd);
+		quit(args, fd);
 	if (command == "CAP")
-		cap(*this, args, fd);
+		cap(args, fd);
 	if (command == "PRIVMSG") //channel specified message and /ping spesific_addr
-		privmsg(*this, args, fd);
+		privmsg(args, fd);
 	if (command == "PING") //just /ping
-		ping(*this, args, fd);
+		ping(args, fd);
 	// if (!strncmp(cap_ls[5].c_str(), command.c_str(), 4))
 	// 	kick(*this, args);
 }

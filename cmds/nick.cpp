@@ -6,15 +6,15 @@ void Server::nick_change(std::string command_n, std::string buffer, int fd)
 {
 	std::cout<<"nick_change_command:*"<<command_n<<"*"<<std::endl;
 	std::string command = "";
-	int i = 0;
+	unsigned int i = 0;
 	while (i < buffer.size() && (buffer[i] > 32))
 		command += buffer[i++]; //first ->command
 	if(this->client_ret(fd) && !this->client_nick_check(command))
 	{
 		std::cout << "Will change the nick fd: *"<<fd<<"*"<<std::endl;
-		std::string b = ":"+this->client_ret(fd)->getNickName()+"!localhost NICK "+command+"\r\n";
+		std::string b = ":"+this->clients_[this->client_ret(fd)].getNickName()+"!localhost NICK "+command+"\r\n";
 		send(fd, b.c_str(), b.size(), 0);
-		this->client_ret(fd)->setNickName(command);
+		this->clients_[this->client_ret(fd)].setNickName(command);
 		buffer.clear();
 	}
 	else
@@ -38,7 +38,7 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 	std::cout<<"nick_first_command:*"<<command_n<<"*"<<std::endl;
 	std::vector<std::string> my_vec;
 	my_vec.push_back(command_n);
-	int i = 0;
+	unsigned int i = 0;
 	while (buffer.size() > i)
 	{
 		std::string command = "";
