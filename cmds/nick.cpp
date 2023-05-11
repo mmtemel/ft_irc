@@ -13,23 +13,12 @@ void Server::nick_change(std::string command_n, std::string buffer, int fd)
 	{
 		std::cout << "Will change the nick fd: *"<<fd<<"*"<<std::endl;
 		std::string b = ":"+this->clients_[this->client_ret(fd)].getNickName()+"!localhost NICK "+command+"\r\n";
-		send(fd, b.c_str(), b.size(), 0);
+		this->write_send(fd, b);
 		this->clients_[this->client_ret(fd)].setNickName(command);
 		buffer.clear();
 	}
 	else
 		std::cout << "\033[1;92mThere is some user has the same nickname or user doesn't exist!\033[0m" << std::endl;
-
-	// (void)command_n;
-	// std::string command = "";
-	// int i = 0;
-	// while (i < buffer.size() && (buffer[i] > 32))
-	// 	command += buffer[i++]; //first ->command
-	// std::string b = ":" + this->my_nick + "!localhost NICK " + command + "\r\n";
-	// send(fd, b.c_str(), b.size(), 0);
-	// this->my_nick.clear();
-	// this->my_nick = command;
-	// buffer.clear();
 }
 
 

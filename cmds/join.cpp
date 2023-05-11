@@ -17,13 +17,13 @@ void Server::join(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	if (my_vec[0][0] != '#' && my_vec[0][0] != '&')
+	if (my_vec[0][0] != '#')
 	{
-		std::cerr << "\033[1;91mWrong channel name, must start with '&' or '#'!\033[0m" << std::endl;
+		std::cerr << "\033[1;91mWrong channel name, must start with #!\033[0m" << std::endl;
 	}
 	else
 	{
-		my_vec[0] = my_vec[0].substr(1, my_vec[0].size() - 1);
+		// my_vec[0] = my_vec[0].substr(1, my_vec[0].size() - 1);
 		unsigned int j = 0;
 		while (j < this->channels_.size())
 		{
@@ -32,7 +32,7 @@ void Server::join(std::string buffer, int fd)
 				// 2 farklı kullanıcı aynı kanala katılamıyor.
 				std::cerr << "\033[1;91mThis channel is already exist:\033[0m" << my_vec[0] << std::endl;
 				std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
-				send(fd, b.c_str(), b.size(), 0);
+				this->write_send(fd, b);
 				b.clear();
 				break;
 			}
@@ -47,7 +47,6 @@ void Server::join(std::string buffer, int fd)
 		{
 			std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
 			this->write_send(fd, b);
-			// send(fd, b.c_str(), b.size(), 0);
 			b.clear();
 		}
 	}

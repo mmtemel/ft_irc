@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/11 19:00:19 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/11 19:57:32 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,25 +85,19 @@ void	Server::newClient()
 	{
 		std::cerr << "Accept failed" << std::endl;
 		close(this->new_socket);
-		// close(server_fd);
-		// exit(1);
 	}
 	else
 	{
 		this->pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-		// Client c(this->new_socket, this->my_port);
-		// this->clients_.push_back(c);
-		// std::cout << "User connected: " << this->clients_.size() << "." << std::endl;
-		// std::cout << "Fds size: " << this->pollfds.size() << "." << std::endl;
 
 		std::map<int, std::string>::iterator it;
 		it = cap_ls.begin();
-		std::string str;
-		while (it != cap_ls.end())
-		{
-			str.append('/' + it->second+"\n");
-			++it;
-		}
-		send(this->new_socket, str.c_str(), str.size(), 0);
+		// std::string str ;
+		// while (it != cap_ls.end())
+		// {
+		// 	str.append('/' + it->second+"\n");
+		// 	++it;
+		// }
+		// this->write_send(this->new_socket, "Pass checking");
 	}
 }

@@ -21,6 +21,6 @@ void Server::ping(std::string buffer, int fd)
 	else
 	{
 		std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost PONG " + my_vec[0] + "\r\n";
-		send(fd, b.c_str(), b.size(), 0);
+		this->write_send(fd, b);
 	}
 }

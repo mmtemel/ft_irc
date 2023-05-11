@@ -28,7 +28,7 @@ void Server::cap(std::string line, int fd)
 			if(this->client_nick_check(temp_nick) == 1)
 				break;
 		}
-		else if (my_vec[i] == "USER")
+		else if (my_vec[i] == "USER" && my_vec.size() >= i+4)
 		{
 			Client c(fd,my_vec[i+1],my_vec[i+2],my_vec[i+3],my_vec[i+4],this->temp_nick);
 			this->clients_.push_back(c);
