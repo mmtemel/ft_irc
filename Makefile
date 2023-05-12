@@ -3,30 +3,39 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+         #
+#    By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/04/23 22:16:26 by yasinsensoy       #+#    #+#              #
-#    Updated: 2023/05/12 22:48:53 by yasinsensoy      ###   ########.fr        #
+#    Created: 2023/02/06 02:13:43 by mtemel            #+#    #+#              #
+#    Updated: 2023/05/12 23:27:31 by mtemel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
-CC = c++ -Wall -Wextra -Werror
-SRCS = $(wildcard headers/*.cpp srcs/*.cpp cmds/*.cpp)
-OBJ = $(SRCS:.cpp = .o)
+CC = c++
+FLAGS = -Wall -Wextra -Werror #-std=c++98
+SRCS = $(wildcard srcs/*.cpp cmds/*.cpp)
+OBJS = $(SRCS:.cpp = .o)
 
-$(NAME): $(OBJ)
-	@$(CC) $(SRCS) -o $(NAME)
-	@echo "\033[1;92mCompiled succesfully..\033[0m"
+$(NAME): $(OBJS)
+		@$(CC) $(FLAGS) $(SRCS) -o $(NAME)
+		@echo "\033[1;32mCOMPILED SUCCESSFULLY\033[0m"
 
 all: $(NAME)
 
 clean:
-	rm -rf  $(NAME)
+		@echo "\033[1;32mCLEAN\033[0m"
+		@rm -rf $(NAME)
 
-fclean: clean
+fclean:
+		@echo "\033[1;32mFCLEAN\033[0m"
+		@make clean
 
+re:
+		@echo "\033[1;32mREMAKE\033[0m"
+		@make fclean
+		@make all
 
-re: fclean all
-
-.PHONY: all clean fclean re
+exe:
+		@echo "\033[1;32mSTART EXECUTING\033[0m"
+		@./$(NAME)
+		@echo "\033[1;32mDONE EXECUTING\033[0m"

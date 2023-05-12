@@ -63,7 +63,7 @@ void Server::join(std::string buffer, int fd)
 
 		unsigned int j = 0;
 		int	fdTemp;
-		while (channels_.size() > 0 && channels_[j].getchannelName() == my_vec[0])
+		while (channels_.size() > 0 && channels_.size() > j && channels_[j].getchannelName() == my_vec[0])
 		{
 			unsigned int k = 0;
 			while (k < channels_[j]._clientsFd.size())
