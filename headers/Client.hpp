@@ -18,6 +18,7 @@ class Client
 		std::string servername;
 	public:
 		Client(int fd, std::string username,std::string hostname, std::string servername, std::string realname, std::string nickname);
+		Client() {};
 		~Client();
 
 		// Getter
@@ -39,6 +40,7 @@ class Client
 		void setServername(std::string const &Servername) { this->servername = Servername; }
 
 		void leave();
+		std::string getPrefixName();
 };
 
 #endif

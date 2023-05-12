@@ -8,13 +8,13 @@ void	Server::executeCommand(int fd)
 	{
 		buffer.clear();
 		char buff[BUFFER_SIZE];
-		memset(buff, 0, BUFFER_SIZE);
+		memset(buff, 0, BUFFER_SIZE); /* Cleaning up memory */
 		int bytes_received = recv(fd, buff, BUFFER_SIZE, 0);
 		if(buff[0] > 31)
-			std::cout << "\033[1;94mReceived message: *" << buff << "*\nFrom fd: *" << fd << "*\033[0m" << std::endl;
+			std::cout << "Received message: *" << buff << "* from fd: *" << fd << "*" << std::endl;
 		if (bytes_received < 0)
 		{
-			std::cerr << "\033[1;94mReceive ended\033[0m" << std::endl;
+			std::cerr << "Receive ended" << std::endl;
 			return ;
 		}
 		buffer = std::string(buff);
@@ -37,13 +37,19 @@ void	Server::executeCommand(int fd)
 
 void	Server::executable(std::string command, std::string args, int fd)
 {
-	std::cout<<"commmand: *" << command << "*"<<std::endl;
+	std::cout << "commmand: *" << command << "*" << std::endl;
 	std::cout << "args: *" << args << "*" << std::endl;
-	// if (!strncmp(cap_ls[0].c_str(), command.c_str(), 3))
-	// 	add(*this, args);
+
+	// std::transform(command.begin(), command.end(), command.begin(), ::toupper);
+	unsigned int i = 0;
+	while (i<command.size())
+	{
+		command[i] = std::toupper(command[i]);
+		i++;
+	}
 	if (command == "NICK")
 	{
-		if(this->is_nick_first == 1)
+		if (this->is_nick_first == 1)
 			this->nick_first(command, args, fd);
 		else
 			this->nick_change(command, args, fd);
@@ -58,6 +64,10 @@ void	Server::executable(std::string command, std::string args, int fd)
 		privmsg(args, fd);
 	if (command == "PING") //just /ping
 		ping(args, fd);
-	// if (!strncmp(cap_ls[5].c_str(), command.c_str(), 4))
-	// 	kick(*this, args);
+	// if (command == "MODE")
+	// 	mode(args, fd);
+	if (command == "PASS")
+		pass(args, fd);
+	if (command == "WHO")
+		who(args, fd);
 }

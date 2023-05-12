@@ -1,7 +1,6 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-#include <stdlib.h>
 #include <sstream>
 #include <cstring>
 #include <iostream>
@@ -39,6 +38,7 @@ class Server
 		std::string			buffer;
 		std::string			temp_nick;
 		int					user_count;
+
 		std::map<int, std::string> cap_ls;
 		std::vector<pollfd>	pollfds;
 		std::vector<Client> clients_;
@@ -65,18 +65,19 @@ class Server
 		void quit(std::string, int);
 		void ping(std::string, int);
 		void privmsg(std::string, int);
+		void mode(std::string, int);
+		void pass(std::string, int);
+		void who(std::string, int);
 
 		void nick_change(std::string, std::string, int);
 		void nick_first(std::string, std::string, int);
 
 		int client_nick_check(std::string nickname);
-		int client_ret(std::string nickname);
-		int client_ret(int fd);
+		Client *client_ret(std::string nickname);
+		Client *client_ret(int fd);
 
 		int getNick_first() {return this->is_nick_first; };
 		void setNick_first(int is) {this->is_nick_first = is; };
-
-		void write_send(int fd, std::string message);
 };
 
 #endif

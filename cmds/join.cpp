@@ -4,10 +4,10 @@
 
 void Server::join(std::string buffer, int fd)
 {
-	std::cout<<"join func buffer: *"<<buffer<<"*"<<std::endl;
 	std::vector<std::string> my_vec;
 	std::string command = "";
 	unsigned int i = 0;
+
 	while (buffer.size() > i)
 	{
 		std::string command = "";
@@ -17,38 +17,69 @@ void Server::join(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	if (my_vec[0][0] != '#')
+
+	i = 0;
+	while (my_vec.size() > i)
 	{
-		std::cerr << "\033[1;91mWrong channel name, must start with #!\033[0m" << std::endl;
-	}
-	else
-	{
-		// my_vec[0] = my_vec[0].substr(1, my_vec[0].size() - 1);
-		unsigned int j = 0;
-		while (j < this->channels_.size())
+		if (my_vec[i][0] != '#' && my_vec[i][0] != '&')
 		{
-			if (this->channels_[j].getchannelName() == my_vec[0])
-			{
-				// 2 farklı kullanıcı aynı kanala katılamıyor.
-				std::cerr << "\033[1;91mThis channel is already exist:\033[0m" << my_vec[0] << std::endl;
-				std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
-				this->write_send(fd, b);
-				b.clear();
-				break;
-			}
-			j++;
+			std::cerr << "\033[1;91mError couldn't connect the channel..\033[0m" << std::endl;
+			continue;
 		}
-		if (j == this->channels_.size())
+		/* Channel olusturma channel size kadar while icinde.*/
+
+		int kanalVarMi = 0;
+		unsigned int idx = 0;
+		while(idx < channels_.size())
 		{
-			Channel c(my_vec[0]);
+			if (channels_[idx].getchannelName() == my_vec[i])
+				kanalVarMi = 1;
+			idx++;
+		}
+
+		if (kanalVarMi == 0)
+		{
+			Channel c(my_vec[i]);
+
+			c.setchannelAdminFd(this->client_ret(fd)->getFd());
+			c._clientsFd.push_back(fd);
 			this->channels_.push_back(c);
+
+			std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
+			send(fd, b.c_str(), b.size(), 0);
 		}
 		else
 		{
-			std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost JOIN " + my_vec[0] + "\r\n";
-			this->write_send(fd, b);
-			b.clear();
+			idx = 0;
+			while(idx < channels_.size())
+			{
+				if (channels_[idx].getchannelName() == my_vec[i])
+					channels_[idx]._clientsFd.push_back(fd);
+				idx++;
+			}
+			std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
+			send(fd, b.c_str(), b.size(), 0);
 		}
+
+		unsigned int j = 0;
+		int	fdTemp;
+		while (channels_.size() > 0 && channels_[j].getchannelName() == my_vec[0])
+		{
+			unsigned int k = 0;
+			while (k < channels_[j]._clientsFd.size())
+			{
+				if (channels_[j]._clientsFd[k] != fd)
+				{
+					fdTemp = channels_[j]._clientsFd[k];
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
+					send(fdTemp, b.c_str(), b.size(), 0);
+					b.clear();
+				}
+				k++;
+			}
+			j++;
+		}
+		i++;
 	}
 	std::cerr << "\033[1;96mNumber of channel:\033[0m" << this->channels_.size() << std::endl;
 	buffer.clear();

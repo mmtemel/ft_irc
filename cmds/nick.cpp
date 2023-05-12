@@ -12,9 +12,9 @@ void Server::nick_change(std::string command_n, std::string buffer, int fd)
 	if(this->client_ret(fd) && !this->client_nick_check(command))
 	{
 		std::cout << "Will change the nick fd: *"<<fd<<"*"<<std::endl;
-		std::string b = ":"+this->clients_[this->client_ret(fd)].getNickName()+"!localhost NICK "+command+"\r\n";
-		this->write_send(fd, b);
-		this->clients_[this->client_ret(fd)].setNickName(command);
+		std::string b = ":" + this->client_ret(fd)->getNickName()+"!localhost NICK "+command+"\r\n";
+		send(fd, b.c_str(), b.size(), 0);
+		this->client_ret(fd)->setNickName(command);
 		buffer.clear();
 	}
 	else
@@ -65,11 +65,13 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 	}
 	my_vec.clear();
 	this->is_nick_first = 0;
-	std::vector<Client>::iterator ite = this->clients_.end();
-	for(std::vector<Client>::iterator it = this->clients_.begin(); it != ite; it++)
+	std::vector<Client>::iterator it_begin = this->clients_.begin();
+	std::vector<Client>::iterator it_end = this->clients_.end();
+	while (it_begin != it_end)
 	{
-		std::cout<<"class_attr:"<<(*it).getFd()<<","<<(*it).getUserName()<<","<<(*it).getHostName()<<",";
-		std::cout<<(*it).getServername()<<","<<(*it).getReelName()<<","<<(*it).getNickName()<<","<<std::endl;
+		std::cout << "class_attr:"<<(*it_begin).getFd() << "," << (*it_begin).getUserName() << ","<<(*it_begin).getHostName() << ",";
+		std::cout << (*it_begin).getServername() << "," << (*it_begin).getReelName() << "," << (*it_begin).getNickName() << "," << std::endl;
+		++it_begin;
 	}
 	std::cout<<"cap sonu geldi"<<std::endl;
 }

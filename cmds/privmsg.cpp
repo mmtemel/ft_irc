@@ -17,22 +17,30 @@ void Server::privmsg(std::string buffer, int fd)
 		my_vec.push_back(command);
 	}
 	i = 0;
-	while(i < my_vec.size())
-	{
-		std::cout << my_vec[i++] << std::endl;
-	}
 
-	size_t found = my_vec[1].find("PING");
-	if (found == std::string::npos)
+	std::cout << my_vec[0] << std::endl;
+	std::cout << my_vec[1] << std::endl;
+
+	if (my_vec[0][0] == '#')
 	{
-		//my_vec[1] = my_vec[1].substr(1, my_vec[1].size()-1);
-		std::cerr << "There is no Ping command, message:*\033[1;96m" << my_vec[1] << "\033[0m*" << std::endl;
-		// std::string b = ":" + this->client_ret(fd)->getNickName() + "!localhost MSG " + my_vec[1] + "\r\n";
-		std::string b = ":" + my_vec[0] + "!localhost " + my_vec[1] + "\r\n";
-	}
-	else
-	{
-		std::string b = ":" + this->clients_[this->client_ret(fd)].getNickName() + "!localhost PONG " + my_vec[2] + "\r\n";
-		this->write_send(fd, b);
+		// Kanaldaki herkese broadcast, kendinin fd'si hariç
+		unsigned int j = 0;
+		while (channels_.size() > 0 && channels_[j].getchannelName() == my_vec[0])
+		{
+			unsigned int k = 0;
+			while (k < channels_[j]._clientsFd.size())
+			{
+				if (channels_[j]._clientsFd[k] != fd)
+				{
+					int fdTemp = channels_[j]._clientsFd[k];
+					//std::cout << "GELEN FD " + std::to_string(fdTemp) << "\n";
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " PRIVMSG " + my_vec[0] + " " + my_vec[1] + "\r\n";
+					send(fdTemp, b.c_str(), b.size(), 0);
+					b.clear();
+				}
+				k++;
+			}
+			j++;
+		}
 	}
 }

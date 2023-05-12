@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/11 20:10:16 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/12 22:49:37 by yasinsensoy      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ Server::Server(int argc, char **argv)
 	cap_ls[3] = "CAP";
 	cap_ls[4] = "KICK";
 	cap_ls[6] = "PING";
+	//cap_ls[7] = "MODE";
+	cap_ls[8] = "PASS";
+	cap_ls[9] = "WHO";
 
 	this->is_nick_first = 0;
 }
@@ -50,7 +53,7 @@ void  Server::appointment(int argc, char **argv)
 		std::cerr << "Arg Error." << std::endl;
 		exit(1);
 	}
-	this->my_port = std::atoi(argv[1]);
+	this->my_port = std::stoi(argv[1]);
 	this->my_password = argv[2];
 }
 
@@ -85,19 +88,20 @@ void	Server::newClient()
 	{
 		std::cerr << "Accept failed" << std::endl;
 		close(this->new_socket);
+
 	}
 	else
 	{
 		this->pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-
-		// std::map<int, std::string>::iterator it;
-		// it = cap_ls.begin();
-		// std::string str ;
-		// while (it != cap_ls.end())
-		// {
-		// 	str.append('/' + it->second+"\n");
-		// 	++it;
-		// }
-		// this->write_send(this->new_socket, "Pass checking");
+		this->user_count++;
+		std::map<int, std::string>::iterator it;
+		it = cap_ls.begin();
+		std::string str;
+		while (it != cap_ls.end())
+		{
+			str.append('/' + it->second+"\n");
+			++it;
+		}
+		send(this->new_socket, str.c_str(), str.size(), 0);
 	}
 }

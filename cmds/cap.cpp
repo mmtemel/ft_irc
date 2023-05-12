@@ -17,7 +17,7 @@ void Server::cap(std::string line, int fd)
 		my_vec.push_back(command);
 	}
 	std::cout << "----------------vec_size--------------:*" << my_vec.size() << "*" << std::endl;
-	if (my_vec.size() < 6)
+	if (my_vec.size() < 3)
 		this->is_nick_first = 1;
 	i = 0;
 	while (my_vec.size() > i)
@@ -28,10 +28,15 @@ void Server::cap(std::string line, int fd)
 			if(this->client_nick_check(temp_nick) == 1)
 				break;
 		}
-		else if (my_vec[i] == "USER" && my_vec.size() >= i+4)
+		else if (my_vec[i] == "USER")
 		{
 			Client c(fd,my_vec[i+1],my_vec[i+2],my_vec[i+3],my_vec[i+4],this->temp_nick);
 			this->clients_.push_back(c);
+		}
+		else if (my_vec[i] == "PASS")
+		{
+			//std::cout << "What is the password : " << my_vec[i + 1] << std::endl;
+			this->my_password = my_vec[i + 1];
 		}
 		std::cout << "vector:" << my_vec[i] << std::endl;
 		i++;
