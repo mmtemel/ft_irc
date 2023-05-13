@@ -5,7 +5,6 @@
 void Server::privmsg(std::string buffer, int fd)
 {
 	std::vector<std::string> my_vec;
-	std::string command = "";
 	unsigned int i = 0;
 	while (buffer.size() > i)
 	{

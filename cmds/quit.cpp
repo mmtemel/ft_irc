@@ -7,7 +7,7 @@ void Server::quit(std::string str, int fd)
 	std::cout << "Flag:" << this->flag << std::endl;
 	if (this->flag == 0)
 	{
-		std::cout << "\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m ";
+		std::cout << "\033[1;91mError: " << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m ";
 		exit(1);
 	}
 
@@ -25,7 +25,7 @@ void Server::quit(std::string str, int fd)
 
 		// Get index of the client to remove
 		unsigned int index = 0;
-		for (; index < this->clients_.size(); ++index)
+		for (; index < this->clients_.size(); index++)
 			if (this->clients_[index].getFd() == fd)
 				break;
 

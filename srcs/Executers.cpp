@@ -60,4 +60,10 @@ void	Server::executable(std::string command, std::string args, int fd)
 		ping(args, fd);
 	if (command == "PASS")
 		pass(args, fd);
+	if (command == "KICK")
+		kick(args, fd);
+	if (command == "MODE")
+		mode(args, fd);
+	if (command == "KILL")
+		kill(args, fd);
 }

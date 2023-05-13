@@ -38,8 +38,6 @@ class Client
 		void setRealName(std::string const &Realname) { this->realname = Realname; }
 		void setHostName(std::string const &Hostname) { this->hostname = Hostname; }
 		void setServername(std::string const &Servername) { this->servername = Servername; }
-
-		void leave();
 		std::string getPrefixName();
 };
 

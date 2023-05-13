@@ -7,7 +7,6 @@ void Server::pass(std::string buffer, int fd)
 	// There is no need to send message to server from hexchat.
 	(void)fd;
 	std::vector<std::string> my_vec;
-	std::string command = "";
 	unsigned int i = 0;
 	while (buffer.size() > i)
 	{
@@ -18,6 +17,9 @@ void Server::pass(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
+	std::cout << "ne geliyo" << my_vec[0] << std::endl;
+	std::cout << my_vec[1] << std::endl;
+	std::cout << my_vec[2] << std::endl;
 	if (my_vec.empty())
 	{
 		std::cerr << "\033[1;95mError: Missing password!\033[0m" << std::endl;
