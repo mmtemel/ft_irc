@@ -1,6 +1,6 @@
 #include "../headers/Channel.hpp"
 
-Channel::Channel(std::string channelName)
+Channel::Channel(std::string channelName) : clientCount(1)
 {
 	this->channelName = channelName;
 }

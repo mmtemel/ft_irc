@@ -24,9 +24,11 @@ class Channel
 		std::vector<int> _clientsFd;
 
 		int getchannelAdminFd();
+		int getchannelUserCount() {return (this->clientCount);};
 		std::string getchannelName();
 
 		void setchannelAdminFd(int adminFd) {this->channelAdminFd = adminFd;}
+		void setClientCount(int i) {this->clientCount = i;}
 
 		void addUser(Server &server,Client c);
 };

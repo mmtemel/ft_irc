@@ -17,7 +17,7 @@ void Server::cap(std::string line, int fd)
 		my_vec.push_back(command);
 	}
 	std::cout << "----------------vec_size--------------:*" << my_vec.size() << "*" << std::endl;
-	if (my_vec.size() < 3)
+	if (my_vec.size() < 5)
 		this->is_nick_first = 1;
 	i = 0;
 	while (my_vec.size() > i)

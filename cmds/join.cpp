@@ -55,7 +55,10 @@ void Server::join(std::string buffer, int fd)
 			while(idx < channels_.size())
 			{
 				if (channels_[idx].getchannelName() == my_vec[i])
+				{
 					channels_[idx]._clientsFd.push_back(fd);
+					channels_[idx].setClientCount(channels_[idx].getchannelUserCount() + 1);
+				}
 				idx++;
 			}
 			std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
