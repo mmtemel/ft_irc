@@ -58,6 +58,7 @@ void Server::join(std::string buffer, int fd)
 				{
 					channels_[idx]._clientsFd.push_back(fd);
 					channels_[idx].setClientCount(channels_[idx].getchannelUserCount() + 1);
+					std::cout << "\033[1;92mAdmin_fd : \033[0m" << channels_[idx].getchannelAdminFd() << std::endl;
 				}
 				idx++;
 			}

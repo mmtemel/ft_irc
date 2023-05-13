@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/13 00:48:26 by yasinsensoy      ###   ########.fr       */
+/*   Updated: 2023/05/13 14:58:25 by ysensoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	Server::newClient()
 		std::string str;
 		while (it != cap_ls.end())
 		{
-			str.append('/' + it->second+"\n");
+			str.append('/' + it->second + "\n");
 			++it;
 		}
 		send(this->new_socket, str.c_str(), str.size(), 0);
