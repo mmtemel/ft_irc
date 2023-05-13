@@ -40,13 +40,7 @@ void	Server::executable(std::string command, std::string args, int fd)
 	std::cout << "commmand: *" << command << "*" << std::endl;
 	std::cout << "args: *" << args << "*" << std::endl;
 
-	// std::transform(command.begin(), command.end(), command.begin(), ::toupper);
-	unsigned int i = 0;
-	while (i<command.size())
-	{
-		command[i] = std::toupper(command[i]);
-		i++;
-	}
+	std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 	if (command == "NICK")
 	{
 		if (this->is_nick_first == 1)
@@ -60,14 +54,10 @@ void	Server::executable(std::string command, std::string args, int fd)
 		quit(args, fd);
 	if (command == "CAP")
 		cap(args, fd);
-	if (command == "PRIVMSG") //channel specified message and /ping spesific_addr
+	if (command == "PRIVMSG")
 		privmsg(args, fd);
-	if (command == "PING") //just /ping
+	if (command == "PING")
 		ping(args, fd);
-	// if (command == "MODE")
-	// 	mode(args, fd);
 	if (command == "PASS")
 		pass(args, fd);
-	if (command == "WHO")
-		who(args, fd);
 }

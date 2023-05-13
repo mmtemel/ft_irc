@@ -17,7 +17,6 @@
 #include <netinet/tcp.h>
 #include "Client.hpp"
 #include "Channel.hpp"
-#include <stdlib.h>
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
@@ -45,6 +44,7 @@ class Server
 		std::vector<Client> clients_;
 		std::vector<Channel> channels_;
 
+
 		Server(int, char **);
 		~Server();
 
@@ -66,9 +66,7 @@ class Server
 		void quit(std::string, int);
 		void ping(std::string, int);
 		void privmsg(std::string, int);
-		void mode(std::string, int);
 		void pass(std::string, int);
-		void who(std::string, int);
 
 		void nick_change(std::string, std::string, int);
 		void nick_first(std::string, std::string, int);
@@ -79,6 +77,7 @@ class Server
 
 		int getNick_first() {return this->is_nick_first; };
 		void setNick_first(int is) {this->is_nick_first = is; };
+		int flag;
 };
 
 #endif

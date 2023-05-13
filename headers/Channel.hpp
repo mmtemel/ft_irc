@@ -29,10 +29,6 @@ class Channel
 		void setchannelAdminFd(int adminFd) {this->channelAdminFd = adminFd;}
 
 		void addUser(Server &server,Client c);
-
-		// std::vector<Client> getUsers();
-
-		// bool findUser(std::string nickName);
 };
 
 #endif

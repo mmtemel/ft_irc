@@ -16,11 +16,6 @@ void Server::ping(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	if (my_vec.size() != 1) // it's not just /ping , have to go privmsg.
-		privmsg(buffer, fd);
-	else
-	{
-		std::string b = ":" + this->client_ret(fd)->getPrefixName() + " PONG " + my_vec[1] + "\r\n";
-		send(fd, b.c_str(), b.size(), 0);
-	}
+	std::string b = ":" + this->client_ret(fd)->getPrefixName() + " PONG " + my_vec[1] + "\r\n";
+	send(fd, b.c_str(), b.size(), 0);
 }

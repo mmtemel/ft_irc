@@ -42,6 +42,7 @@ void Server::join(std::string buffer, int fd)
 			Channel c(my_vec[i]);
 
 			c.setchannelAdminFd(this->client_ret(fd)->getFd());
+			std::cout << "\033[1;92mAdmin_fd : \033[0m" << c.getchannelAdminFd() << std::endl;
 			c._clientsFd.push_back(fd);
 			this->channels_.push_back(c);
 
@@ -60,10 +61,10 @@ void Server::join(std::string buffer, int fd)
 			std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
 			send(fd, b.c_str(), b.size(), 0);
 		}
-
+		this->flag = 1; // two /server localhost 4242.
 		unsigned int j = 0;
 		int	fdTemp;
-		while (channels_.size() > 0 && channels_.size() > j && channels_[j].getchannelName() == my_vec[0])
+		while (j < channels_.size() && channels_[j].getchannelName() == my_vec[0])
 		{
 			unsigned int k = 0;
 			while (k < channels_[j]._clientsFd.size())

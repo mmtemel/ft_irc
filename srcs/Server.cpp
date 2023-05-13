@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/12 23:27:11 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/13 00:48:26 by yasinsensoy      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 Server::Server(int argc, char **argv)
 {
 	appointment(argc, argv);
-	std::cout << "Starting IRC server on port " << std::endl;
+	std::cout << "\033[1;94mStarting IRC server on port \033[0m" << std::endl;
 
 	socketOperations();
 	socketOperations2(argv);
@@ -27,10 +27,8 @@ Server::Server(int argc, char **argv)
 	cap_ls[2] = "QUIT";
 	cap_ls[3] = "CAP";
 	cap_ls[4] = "KICK";
-	cap_ls[6] = "PING";
-	//cap_ls[7] = "MODE";
-	cap_ls[8] = "PASS";
-	cap_ls[9] = "WHO";
+	cap_ls[5] = "PING";
+	cap_ls[6] = "PASS";
 
 	this->is_nick_first = 0;
 }
@@ -53,8 +51,9 @@ void  Server::appointment(int argc, char **argv)
 		std::cerr << "Arg Error." << std::endl;
 		exit(1);
 	}
-	this->my_port = std::atoi(argv[1]);
+	this->my_port = std::stoi(argv[1]);
 	this->my_password = argv[2];
+	this->flag = 0;
 }
 
 void	Server::loop()
