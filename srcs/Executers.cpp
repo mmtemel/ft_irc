@@ -46,7 +46,7 @@ void	Server::executable(std::string command, std::string args, int fd)
 		if (this->is_nick_first == 1)
 			this->nick_first(command, args, fd);
 		else
-			this->nick_change(command, args, fd);
+			this->nick_change(args, fd);
 	}
 	if (command == "JOIN")
 		join(args, fd);
@@ -59,11 +59,13 @@ void	Server::executable(std::string command, std::string args, int fd)
 	if (command == "PING")
 		ping(args, fd);
 	if (command == "PASS")
-		pass(args, fd);
+		pass(args);
 	if (command == "KICK")
 		kick(args, fd);
 	if (command == "MODE")
 		mode(args, fd);
 	if (command == "KILL")
 		kill(args, fd);
+	if (command == "BOT")
+		bot(args, fd);
 }

@@ -11,7 +11,7 @@ void Server::join(std::string buffer, int fd)
 	{
 		std::string command = "";
 		while (i < buffer.size() && (buffer[i] != ' ' && buffer[i] != '\r' && buffer[i] != '\n'))
-			command += buffer[i++]; //first ->command
+			command += buffer[i++];
 		while (i < buffer.size() && (buffer[i] == ' ' || buffer[i] == '\r' || buffer[i] == '\n'))
 			i++;
 		my_vec.push_back(command);
@@ -25,18 +25,18 @@ void Server::join(std::string buffer, int fd)
 			std::cerr << "\033[1;91mError couldn't connect the channel..\033[0m" << std::endl;
 			continue;
 		}
-		/* Channel olusturma channel size kadar while icinde.*/
+		/* Channel creation as much as channel size.*/
 
-		int kanalVarMi = 0;
+		int flag = 0;
 		unsigned int idx = 0;
 		while(idx < channels_.size())
 		{
 			if (channels_[idx].getchannelName() == my_vec[i])
-				kanalVarMi = 1;
+				flag = 1;
 			idx++;
 		}
 
-		if (kanalVarMi == 0)
+		if (flag == 0)
 		{
 			Channel c(my_vec[i]);
 

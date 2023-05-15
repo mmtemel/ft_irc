@@ -4,6 +4,7 @@
 
 void Server::kick(std::string buffer, int fd)
 {
+	// /kick #channel_name user_name
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 
@@ -20,7 +21,7 @@ void Server::kick(std::string buffer, int fd)
 	this->channel_ok = 0;
 
 	if (my_vec.size() < 3){
-		std::cerr << "\033[1;91mHatalı komut formatı. Örnek kullanım: /kick #kanal kullanıcı_adı\033[0m" << std::endl;
+		std::cerr << "\033[1;91mWrong command format. Especially: /kick #channel user_name\033[0m" << std::endl;
 		return;
 	}
 
@@ -61,14 +62,14 @@ void Server::kick(std::string buffer, int fd)
 
 	// Check if the admin is trying to kick himself
 	if (kick_fd == fd){
-		std::cerr << "\033[1;91mYou cannot kick yourself.\033[0m" << std::endl;
+		std::cerr << "\033[1;91mYou can't kick yourself.\033[0m" << std::endl;
 		return;
 	}
 
-	//kanal varsa admin diye mi bak.
+	//Channel ok admin check
 	if (this->channel_ok == 1)
 	{
-			//searching berk to clients.
+			//searching user to clients.
 			std::cout << "***" << std::endl;
 			unsigned int m = 0;
 			while (this->channels_[index]._clientsFd.size() > m)
@@ -83,5 +84,7 @@ void Server::kick(std::string buffer, int fd)
 	}
 	std::string msg = ":" + this->client_ret(fd)->getNickName() + " KICK " + my_vec[1] + " " + my_vec[2] + " :Speaking English\r\n";
 	send(fd, msg.c_str(), msg.size(), 0);
+	std::cout << "\033[1;92mKicked succesfully...\033[0m" << std::endl;
+	std::cout << this->client_ret(fd)->getNickName() << " Kicked " << my_vec[2] << " from the channel." << std::endl;
 	buffer.clear();
 }

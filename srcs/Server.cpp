@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ysensoy <ysensoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yasinsensoy <yasinsensoy@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/13 14:58:25 by ysensoy          ###   ########.fr       */
+/*   Updated: 2023/05/14 01:36:02 by yasinsensoy      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ Server::Server(int argc, char **argv)
 	cap_ls[4] = "KICK";
 	cap_ls[5] = "PING";
 	cap_ls[6] = "PASS";
+	cap_ls[7] = "BOT";
 
 	this->is_nick_first = 0;
 }

@@ -2,16 +2,15 @@
 #include "../headers/Client.hpp"
 #include "../headers/Channel.hpp"
 
-void Server::nick_change(std::string command_n, std::string buffer, int fd)
+void Server::nick_change(std::string buffer, int fd)
 {
-	std::cout<<"nick_change_command:*"<<command_n<<"*"<<std::endl;
 	std::string command = "";
 	unsigned int i = 0;
 	while (i < buffer.size() && (buffer[i] > 32))
 		command += buffer[i++]; //first ->command
-	if(this->client_ret(fd) && !this->client_nick_check(command))
+	if (this->client_ret(fd) && !this->client_nick_check(command))
 	{
-		std::cout << "Will change the nick fd: *"<<fd<<"*"<<std::endl;
+		std::cout << "Will change the nick fd: *" << fd << "*" <<std::endl;
 		std::string b = ":" + this->client_ret(fd)->getNickName()+"!localhost NICK "+command+"\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 		this->client_ret(fd)->setNickName(command);
@@ -24,7 +23,7 @@ void Server::nick_change(std::string command_n, std::string buffer, int fd)
 
 void Server::nick_first(std::string command_n, std::string buffer, int fd)
 {
-	std::cout<<"nick_first_command:*"<<command_n<<"*"<<std::endl;
+	std::cout << "nick_first_command:*" << command_n << "*" << std::endl;
 	std::vector<std::string> my_vec;
 	my_vec.push_back(command_n);
 	unsigned int i = 0;
@@ -33,12 +32,11 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 		std::string command = "";
 		std::string args = "";
 		while (i < buffer.size() && (buffer[i] > 32))
-			command += buffer[i++]; //first ->command
+			command += buffer[i++];
 		while (i < buffer.size() && (buffer[i] < 33))
 			i++;
 		my_vec.push_back(command);
 	}
-	std::cout << "----------------_nick_first_vec_size--------------:*" << my_vec.size() << "*" << std::endl;
 	if (my_vec.size() < 3)
 		this->is_nick_first = 1;
 	i = 0;
@@ -60,7 +58,6 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 			else
 				std::cout << "Nickname exists!" << std::endl;
 		}
-		std::cout << "vector:" << my_vec[i] << std::endl;
 		i++;
 	}
 	my_vec.clear();
@@ -73,5 +70,4 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 		std::cout << (*it_begin).getServername() << "," << (*it_begin).getReelName() << "," << (*it_begin).getNickName() << "," << std::endl;
 		++it_begin;
 	}
-	std::cout<<"cap sonu geldi"<<std::endl;
 }
