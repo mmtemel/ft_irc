@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/16 19:12:08 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/16 22:52:19 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,19 @@ Server::~Server()
 
 void  Server::appointment(int argc, char **argv)
 {
-	if (argc != 3)
-	{
-		std::cerr << "Arg Error." << std::endl;
-		exit(1);
-	}
-
-	this->my_port = std::atoi(argv[1]);
-	this->my_password = argv[2];
+	(void)argc;(void)argv;
+	// if (argc != 3)
+	// {
+		// std::cerr << "Arg Error." << std::endl;
+		// exit(1);
+	// }
+	
+	this->my_port = 9898;
+	this->my_password = "1234";
+	
+	// this->my_port = std::atoi(argv[1]);
+	// this->my_password = argv[2];
+	
 	this->flag = 0;
 
 	memset((char *)&address, 0, sizeof(address));

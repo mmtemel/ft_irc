@@ -17,7 +17,11 @@ void Server::nick_change(std::string buffer, int fd)
 		buffer.clear();
 	}
 	else
+	{
 		std::cout << "\033[1;92mThere is some user has the same nickname or user doesn't exist!\033[0m" << std::endl;
+		std::string b = ":" + this->client_ret(fd)->getPrefixName()+"NICK IS ALREADY IN USE \r\n";
+		send(fd, b.c_str(), b.size(), 0);
+	}
 }
 
 
@@ -47,7 +51,8 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 			this->temp_nick = my_vec[i + 1];
 			if(this->client_nick_check(temp_nick) == 1)
 			{
-				std::cout<<"NICK IS ALREADY IN THE SERVER!\n";
+				std::cout<<"\033[1;91mNICK IS ALREADY IN THE SERVER!\033[0m\n";
+				quit("Same nick, change yours!", fd);
 				break;
 			}
 		}

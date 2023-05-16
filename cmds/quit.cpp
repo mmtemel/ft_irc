@@ -4,11 +4,32 @@
 
 void Server::quit(std::string str, int fd)
 {
+
 	if (this->flag == 0)
 	{
 		//There is no join
-		std::cerr << "\033[1;91mError: " << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m" << std::endl;
-		exit(1);
+		if(this->client_ret(fd))
+		{
+			std::cerr << "\033[1;91mError: " << this->client_ret(fd)->getNickName() << " is leaving with message1111\033[0m" << std::endl;
+			for (size_t i = 0; i < pollfds.size(); i++)
+			{
+				if(fd == pollfds[i].fd)
+				{
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT :Leaving " + str + "\r\n";
+					send(fd, b.c_str(), b.size(), 0);
+					close(pollfds[i].fd);
+					pollfds.erase(pollfds.begin()+i);
+				}
+			}
+			for (size_t i = 0; i < pollfds.size(); i++)
+			{
+				if(fd == clients_[i].getFd())
+				{
+					clients_.erase(clients_.begin()+i);
+				}
+			}
+		}
+		return;
 	}
 
 	std::vector<std::string> my_vec;
@@ -26,7 +47,8 @@ void Server::quit(std::string str, int fd)
 
 	i = 0;
 	bool flag = false;
-	my_vec[1] = my_vec[1].substr(1); //cut the :
+	if (my_vec[1][0] == ':')
+		my_vec[1] = my_vec[1].substr(1); //cut the :
 
 	while (this->channels_.size() > i)
 	{
@@ -40,7 +62,8 @@ void Server::quit(std::string str, int fd)
 
 	if (this->client_ret(fd) && flag == true)
 	{
-		std::cout << "\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m" << std::endl;
+		if(this->client_ret(fd))
+			std::cout << "\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message\033[0m" << std::endl;
 
 		// Get index of the client to remove
 		unsigned int index = 0;
@@ -91,7 +114,7 @@ void Server::quit(std::string str, int fd)
 	}
 	else
 	{
-		std::cerr << "\033[1;91mError...\033[0m" << std::endl;
+		std::cerr << "\033[1;91mError: QUIT\033[0m" << std::endl;
 		return;
 	}
 }
