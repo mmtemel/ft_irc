@@ -4,7 +4,7 @@
 
 void Server::quit(std::string str, int fd)
 {
-
+	std::cout<<"QUIT STR: *"<<str<<"* FLAG: *"<<this->flag<<"*\n";
 	if (this->flag == 0)
 	{
 		//There is no join
@@ -15,7 +15,7 @@ void Server::quit(std::string str, int fd)
 			{
 				if(fd == pollfds[i].fd)
 				{
-					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT :Leaving " + str + "\r\n";
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT " + str + "\r\n";
 					send(fd, b.c_str(), b.size(), 0);
 					close(pollfds[i].fd);
 					pollfds.erase(pollfds.begin()+i);
@@ -47,7 +47,8 @@ void Server::quit(std::string str, int fd)
 
 	i = 0;
 	bool flag = false;
-	if (my_vec[1][0] == ':')
+	std::cout<<"QUIT MY_VEC SIZE: *"<<my_vec.size()<<"*\n";
+	if (my_vec.size() > 1 && my_vec[1][0] == ':')
 		my_vec[1] = my_vec[1].substr(1); //cut the :
 
 	while (this->channels_.size() > i)
