@@ -46,14 +46,18 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 		{
 			this->temp_nick = my_vec[i + 1];
 			if(this->client_nick_check(temp_nick) == 1)
+			{
+				std::cout<<"NICK IS ALREADY IN THE SERVER!\n";
 				break;
+			}
 		}
 		else if (my_vec[i] == "USER")
 		{
-			if (!this->client_nick_check(this->temp_nick))
+			if (!this->client_nick_check(this->temp_nick) && my_vec.size() > i+4)
 			{
 				Client c(fd,my_vec[i+1],my_vec[i+2],my_vec[i+3],my_vec[i+4],this->temp_nick);
 				this->clients_.push_back(c);
+				std::cout<<"\033[1;92mNEW USER CREATED AND ADDED TO THE VEC!\033[0m\n";
 			}
 			else
 				std::cout << "Nickname exists!" << std::endl;

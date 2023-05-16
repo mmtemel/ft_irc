@@ -14,12 +14,12 @@ void Server::quit(std::string str, int fd)
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 
-	while (buffer.size() > i)
+	while (str.size() > i)
 	{
 		std::string command = "";
-		while (i < buffer.size() && (buffer[i] != ' ' && buffer[i] != '\r' && buffer[i] != '\n'))
-			command += buffer[i++];
-		while (i < buffer.size() && (buffer[i] == ' ' || buffer[i] == '\r' || buffer[i] == '\n'))
+		while (i < str.size() && (str[i] != ' ' && str[i] != '\r' && str[i] != '\n'))
+			command += str[i++];
+		while (i < str.size() && (str[i] == ' ' || str[i] == '\r' || str[i] == '\n'))
 			i++;
 		my_vec.push_back(command);
 	}

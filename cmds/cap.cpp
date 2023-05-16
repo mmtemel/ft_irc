@@ -4,20 +4,20 @@
 
 void Server::cap(std::string line, int fd)
 {
+	std::cout<<"CAP LINE: *"<<line<<"* LINE SIZE: *"<<line.size()<<"*\n";
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 	while (line.size() > i)
 	{
 		std::string command = "";
-		std::string args = "";
-		while (i < buffer.size() && (buffer[i] > 32))
-			command += buffer[i++]; //first ->command
-		while (i < buffer.size() && (buffer[i] < 33))
+		while (i < line.size() && (line[i] > 32))
+			command += line[i++]; //first ->command
+		while (i < line.size() && (line[i] < 33))
 			i++;
 		my_vec.push_back(command);
 	}
 	std::cout << "----------------vec_size--------------:*" << my_vec.size() << "*" << std::endl;
-	if (my_vec.size() < 5)
+	if (my_vec.size() < 7)
 		this->is_nick_first = 1;
 	i = 0;
 	while (my_vec.size() > i)
@@ -26,19 +26,27 @@ void Server::cap(std::string line, int fd)
 		{
 			this->nick_first(my_vec[i], my_vec[i + 1], fd);
 			if(this->client_nick_check(temp_nick) == 1)
+			{
+				std::cout<<"NCIK IS ALREADY IN THE SERVER!\n";
 				break;
+			}
 		}
 		else if (my_vec[i] == "USER")
 		{
-			Client c(fd,my_vec[i+1],my_vec[i+2],my_vec[i+3],my_vec[i+4],this->temp_nick);
-			this->clients_.push_back(c);
+			if (!this->client_nick_check(this->temp_nick) && my_vec.size() > i+4)
+			{
+				Client c(fd,my_vec[i+1],my_vec[i+2],my_vec[i+3],my_vec[i+4],this->temp_nick);
+				this->clients_.push_back(c);
+				std::cout<<"\033[1;92mNEW USER CREATED AND ADDED TO THE VEC!\033[0m\n";
+			}
 		}
 		else if (my_vec[i] == "PASS")
 		{
 			//std::cout << "What is the password : " << my_vec[i + 1] << std::endl;
-			this->my_password = my_vec[i + 1];
+			// this->my_password = my_vec[i + 1];
+			pass(my_vec[i+1], fd);
 		}
-		std::cout << "vector:" << my_vec[i] << std::endl;
+		std::cout << "CAP vector:" << my_vec[i] << std::endl;
 		i++;
 	}
 	my_vec.clear();

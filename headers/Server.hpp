@@ -18,6 +18,7 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 #include <cstdlib>
+#include <algorithm>
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
@@ -36,7 +37,7 @@ class Server
 		int					new_socket;
 		int					server_fd;
 		struct sockaddr_in	address;
-		std::string			buffer;
+		// std::string			buffer;
 		std::string			temp_nick;
 		int					user_count;
 
@@ -67,11 +68,12 @@ class Server
 		void quit(std::string, int);
 		void ping(std::string, int);
 		void privmsg(std::string, int);
-		void pass(std::string);
+		void pass(std::string, int);
 		void kick(std::string, int);
 		void mode(std::string, int);
 		void kill(std::string, int);
 		void bot(std::string, int);
+		void user(std::string, int);
 
 		void nick_change(std::string, int);
 		void nick_first(std::string, std::string, int);
