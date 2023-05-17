@@ -19,11 +19,10 @@ void Server::nick_change(std::string buffer, int fd)
 	else
 	{
 		std::cout << "\033[1;92mThere is some user has the same nickname or user doesn't exist!\033[0m" << std::endl;
-		std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NICK IS ALREADY IN USE \r\n";
+		std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" This nick is already in use: "+command+"\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 	}
 }
-
 
 void Server::nick_first(std::string command_n, std::string buffer, int fd)
 {
