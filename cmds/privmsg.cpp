@@ -28,6 +28,8 @@ void Server::privmsg(std::string buffer, int fd)
 				if(channels_[j].n == true && it == channels_[j]._clientsFd.end())
 				{
 					std::cout<<"NO MESSAGES ALLOWED FROM THE OUTSIDE TO "<<this->channels_[j].getchannelName()<<"!\n";
+					std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" NO MESSAGES ALLOWED FROM THE OUTSIDE TO "+this->channels_[j].getchannelName()+"!\r\n";
+					send(fd, b.c_str(), b.size(), 0);
 					return;
 				}
 				unsigned int k = 0;

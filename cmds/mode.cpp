@@ -62,6 +62,8 @@ void Server::mode(std::string buffer, int fd)
 			{
 				this->channels_[j].n = true;
 				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S N MODE SET! NO MESSAGES FROM THE OUTSIDE!\n";
+				std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S N MODE TO SET! NO MESSAGES FROM THE OUTSIDE!\r\n";
+				send(fd, b.c_str(), b.size(), 0);
 			}
 			else if(my_vec[i][1] == 'l' && my_vec[i].size() == 2 && i+1 < my_vec.size())
 			{
@@ -72,6 +74,8 @@ void Server::mode(std::string buffer, int fd)
 				{
 					this->channels_[j].setChannelLimit(atoi(my_vec[i+1].c_str()));
 					std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S L MODE SET! USER LIMIT IS "<<atoi(my_vec[i+1].c_str())<<"\n";
+					std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S L MODE TO SET! USER LIMIT IS "+my_vec[i+1]+"!\r\n";
+					send(fd, b.c_str(), b.size(), 0);
 				}
 				catch(const std::exception& e)
 				{
@@ -83,6 +87,8 @@ void Server::mode(std::string buffer, int fd)
 				this->channels_[j].k = true;
 				this->channels_[j].setChannelKey(my_vec[i+1]);
 				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S K MODE SET! THIS CHANNEL HAS PASSWORD!\n";
+				std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S K MODE TO SET! THIS CHANNEL HAS PASSWORD!\r\n";
+				send(fd, b.c_str(), b.size(), 0);
 			}
 		}
 		else if(my_vec[i][0] == '-')
@@ -91,16 +97,22 @@ void Server::mode(std::string buffer, int fd)
 			{
 				this->channels_[j].n = false;
 				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S N MODE UNSET! MESSAGES ACCEPTED FROM THE OUTSIDE!\n";
+				std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S N MODE TO UNSET! MESSAGES ACCEPTED FROM THE OUTSIDE!\r\n";
+				send(fd, b.c_str(), b.size(), 0);
 			}
 			else if(my_vec[i][1] == 'l' && my_vec[i].size() == 2)
 			{
 				this->channels_[j].l = false;
-				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S L MODE UNSET! THERE IS NO USER LIMIT\n";
+				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S L MODE UNSET! THERE IS NO USER LIMIT!\n";
+				std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S L MODE TO UNSET! THERE IS NO USER LIMIT!\r\n";
+				send(fd, b.c_str(), b.size(), 0);
 			}
 			else if(my_vec[i][1] == 'k' && my_vec[i].size() == 2)
 			{
 				this->channels_[j].k = false;
 				std::cout<<"CHANNEL "<<this->channels_[j].getchannelName()<<"'S K MODE UNSET! THIS CHANNEL HAS NO PASSWORD!\n";
+				std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NOTICE "+ this->client_ret(fd)->getNickName() +" YOU CHANGED CHANNEL "+this->channels_[j].getchannelName()+"'S K MODE TO UNSET! THIS CHANNEL HAS NO PASSWORD!\r\n";
+				send(fd, b.c_str(), b.size(), 0);
 			}
 		}
 	}
