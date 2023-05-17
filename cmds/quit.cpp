@@ -4,6 +4,7 @@
 
 void Server::quit(std::string str, int fd)
 {
+	this->pass_fd[fd].erase();
 	if (this->flag == 0)
 	{
 		//There is no join
