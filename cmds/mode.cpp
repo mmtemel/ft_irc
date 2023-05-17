@@ -4,8 +4,6 @@
 
 void Server::mode(std::string buffer, int fd)
 {
-	std::cout<<"\033[1;93mMODE BUFFER: *"<<buffer<<"*\033[0m\n";
-	// (void)fd;
 	std::vector<std::string> my_vec;
 	std::string command = "";
 	unsigned int i = 0;
@@ -17,12 +15,6 @@ void Server::mode(std::string buffer, int fd)
 		while (i < buffer.size() && (buffer[i] == ' ' || buffer[i] == '\r' || buffer[i] == '\n'))
 			i++;
 		my_vec.push_back(command);
-	}
-	i = 0;
-	while (i < my_vec.size())
-	{
-		std::cout<<"\033[1;95mMODE func my_vec["<<i<<"] : *"<<my_vec[i]<<"*\033[0m\n";
-		i++;
 	}
 	i = 0;
 	bool channel_exists_admin = false;
@@ -50,9 +42,6 @@ void Server::mode(std::string buffer, int fd)
 	}
 	else
 		std::cout<<"\033[1;94mChannel exist and fd is the admin!\033[0m\n";
-	if(i < my_vec.size())
-		std::cout<<"vec after channel and admin check: *"<<my_vec[i]<<"*\n";
-	std::cout<<"channel name at the channel vector: *"<<this->channels_[j].getchannelName()<<"*\n";
 	i++;
 	if(i < my_vec.size())
 	{

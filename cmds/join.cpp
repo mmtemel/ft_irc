@@ -4,7 +4,6 @@
 
 void Server::join(std::string buffer, int fd)
 {
-	std::cout<<"JOIN BUFFER BEFORE PARSING: *"<<buffer<<"*\n";
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 
@@ -18,9 +17,6 @@ void Server::join(std::string buffer, int fd)
 		my_vec.push_back(command);
 	}
 
-	// i = 0;
-	// while (my_vec.size() > i)
-	// {
 	if (my_vec.size() > 0 && my_vec[0][0] != '#')
 	{
 		std::cerr << "\033[1;91mError: channel name starts with #!\033[0m" << std::endl;
@@ -115,8 +111,6 @@ void Server::join(std::string buffer, int fd)
 		}
 		j++;
 	}
-	// i++;
-	// }
 	std::cerr << "\033[1;96mNumber of channels:\033[0m" << this->channels_.size() << std::endl;
 	buffer.clear();
 }

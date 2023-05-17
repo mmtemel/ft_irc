@@ -4,7 +4,6 @@
 
 void Server::cap(std::string line, int fd)
 {
-	std::cout<<"CAP LINE: *"<<line<<"* LINE SIZE: *"<<line.size()<<"*\n";
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 	while (line.size() > i)
@@ -16,7 +15,6 @@ void Server::cap(std::string line, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	std::cout << "----------------vec_size--------------:*" << my_vec.size() << "*" << std::endl;
 	if (my_vec.size() < 7)
 		this->is_nick_first = 1;
 	i = 0;
@@ -41,12 +39,7 @@ void Server::cap(std::string line, int fd)
 			}
 		}
 		else if (my_vec[i] == "PASS")
-		{
-			//std::cout << "What is the password : " << my_vec[i + 1] << std::endl;
-			// this->my_password = my_vec[i + 1];
 			pass(my_vec[i+1], fd);
-		}
-		std::cout << "CAP vector:" << my_vec[i] << std::endl;
 		i++;
 	}
 	my_vec.clear();

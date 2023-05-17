@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/17 03:55:03 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 13:36:48 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,18 @@ Server::~Server()
 
 void  Server::appointment(int argc, char **argv)
 {
-	(void)argc;(void)argv;
-	// if (argc != 3)
-	// {
-		// std::cerr << "Arg Error." << std::endl;
-		// exit(1);
-	// }
+	// (void)argc;(void)argv;
+	if (argc != 3)
+	{
+		std::cerr << "Arg Error." << std::endl;
+		exit(1);
+	}
 	
-	this->my_port = 9898;
-	this->my_password = "1234";
+	// this->my_port = 9898;
+	// this->my_password = "1234";
 	
-	// this->my_port = std::atoi(argv[1]);
-	// this->my_password = argv[2];
+	this->my_port = std::atoi(argv[1]);
+	this->my_password = argv[2];
 	
 	this->flag = 0;
 
@@ -115,20 +115,5 @@ void	Server::newClient()
 		return;
 	}
 	else
-	{
-		// std::cout << "New socket else: " << this->new_socket << std::endl;
 		this->pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-		// this->user_count++;
-		// std::map<int, std::string>::iterator it;
-		// it = cap_ls.begin();
-		// std::string str;
-		// while (it != cap_ls.end())
-		// {
-		// 	str.append('/' + it->second + "\n");
-		// 	++it;
-		// }
-		// str.append("hey this is the str to send at the beginning\r\n");
-		// send(this->new_socket, str.c_str(), str.size(), 0);
-	}
-	std::cout<<"user connected! fd: *"<<this->new_socket<<"*"<<std::endl;
 }

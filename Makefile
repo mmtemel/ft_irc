@@ -6,13 +6,13 @@
 #    By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/16 18:24:32 by mtemel            #+#    #+#              #
-#    Updated: 2023/05/17 01:03:24 by mtemel           ###   ########.fr        #
+#    Updated: 2023/05/17 13:31:50 by mtemel           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CC = c++
-FLAGS = -Wall -Wextra -Werror -g #-std=c++98
+FLAGS = -Wall -Wextra -Werror -g -std=c++98
 SRCS = $(wildcard headers/*.cpp srcs/*.cpp cmds/*.cpp)
 OBJS = $(SRCS:.cpp = .o)
 
