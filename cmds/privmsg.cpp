@@ -24,7 +24,12 @@ void Server::privmsg(std::string buffer, int fd)
 		{
 			if(channels_[j].getchannelName() == my_vec[0])
 			{
-				
+				std::vector<int>::iterator it = std::find(channels_[j]._clientsFd.begin(), channels_[j]._clientsFd.end(), fd);
+				if(channels_[j].n == true && it == channels_[j]._clientsFd.end())
+				{
+					std::cout<<"NO MESSAGES ALLOWED FROM THE OUTSIDE TO "<<this->channels_[j].getchannelName()<<"!\n";
+					return;
+				}
 				unsigned int k = 0;
 				while (k < channels_[j]._clientsFd.size())
 				{
