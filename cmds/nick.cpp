@@ -52,7 +52,7 @@ void Server::nick_first(std::string command_n, std::string buffer, int fd)
 			if(this->client_nick_check(temp_nick) == 1)
 			{
 				std::cout<<"\033[1;91mNICK IS ALREADY IN THE SERVER!\033[0m\n";
-				quit("Same nick, change yours!", fd);
+				quit("Nick is already in use!", fd);
 				break;
 			}
 		}

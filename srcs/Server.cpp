@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/16 22:52:19 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 03:55:03 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ Server::Server(int argc, char **argv)
 	cap_ls[5] = "PING";
 	cap_ls[6] = "PASS";
 	cap_ls[7] = "BOT";
+	cap_ls[8] = "MODE";
+	cap_ls[9] = "KILL";
+	cap_ls[10] = "USER";
 
 	this->is_nick_first = 0;
 }
@@ -115,17 +118,17 @@ void	Server::newClient()
 	{
 		// std::cout << "New socket else: " << this->new_socket << std::endl;
 		this->pollfds.push_back((pollfd){this->new_socket, POLLIN, 0});
-		this->user_count++;
-		std::map<int, std::string>::iterator it;
-		it = cap_ls.begin();
-		std::string str;
-		while (it != cap_ls.end())
-		{
-			str.append('/' + it->second + "\n");
-			++it;
-		}
-		str.append("hey this is the str to send at the beginning\r\n");
-		send(this->new_socket, str.c_str(), str.size(), 0);
+		// this->user_count++;
+		// std::map<int, std::string>::iterator it;
+		// it = cap_ls.begin();
+		// std::string str;
+		// while (it != cap_ls.end())
+		// {
+		// 	str.append('/' + it->second + "\n");
+		// 	++it;
+		// }
+		// str.append("hey this is the str to send at the beginning\r\n");
+		// send(this->new_socket, str.c_str(), str.size(), 0);
 	}
 	std::cout<<"user connected! fd: *"<<this->new_socket<<"*"<<std::endl;
 }

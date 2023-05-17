@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:14:48 by mtemel            #+#    #+#             */
-/*   Updated: 2023/05/17 03:17:58 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 03:58:26 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@ void Server::user(std::string buffer, int fd)
 			{
 				std::cout<<"USER: WRONG PASSWORD!\n";
 				quit("USER: WRONG PASSWORD!", fd);
+			}
+			else
+			{
+				std::map<int, std::string>::iterator it;
+				it = cap_ls.begin();
+				std::string str = "Here is the command list:\n";
+				while (it != cap_ls.end())
+				{
+					str.append('/' + it->second + "\n");
+					++it;
+				}
+				str.append("IRC server by YSENSOY and MTEMEL\r\n");
+				send(this->new_socket, str.c_str(), str.size(), 0);
 			}
 	}
 	else if (my_vec.size() < 4)

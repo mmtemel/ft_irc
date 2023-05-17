@@ -35,7 +35,7 @@ void Server::quit(std::string str, int fd)
 			{
 				if(fd == pollfds[i].fd)
 				{
-					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT :Leaving " + str + "\r\n";
+					std::string b = "QUIT :Leaving " + str + "\r\n";
 					send(fd, b.c_str(), b.size(), 0);
 					close(pollfds[i].fd);
 					pollfds.erase(pollfds.begin()+i);
@@ -76,8 +76,7 @@ void Server::quit(std::string str, int fd)
 
 	if (this->client_ret(fd) && (_flag == true || this->flag == 1))
 	{
-		if(this->client_ret(fd))
-			std::cout << "\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message22222\033[0m" << std::endl;
+		std::cout << "\033[1;91m" << this->client_ret(fd)->getNickName() << " is leaving with message22222\033[0m" << std::endl;
 
 		// Get index of the client to remove
 		// unsigned int index = 0;
@@ -148,11 +147,20 @@ void Server::quit(std::string str, int fd)
 			x++;
 		}
 	}
-	// else
-	// {
-		// std::cerr << "\033[1;91mError: QUIT\033[0m" << std::endl;
-		// return;
-	// }
+	else if(_flag == true || this->flag == 1)
+	{
+		std::cerr << "\033[1;91mError: QUIT flag 1 no client to fd\033[0m" << std::endl;
+		for (size_t i = 0; i < pollfds.size(); i++)
+		{
+			if(fd == pollfds[i].fd)
+			{
+				std::string b = "QUIT :Leaving " + str + "\r\n";
+				send(fd, b.c_str(), b.size(), 0);
+				close(pollfds[i].fd);
+				pollfds.erase(pollfds.begin()+i);
+			}
+		}
+	}
 	my_vec.clear();
 	std::vector<Client>::iterator ite = this->clients_.end();
 	for(std::vector<Client>::iterator it = this->clients_.begin(); it != ite; it++)
