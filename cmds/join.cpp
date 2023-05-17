@@ -4,6 +4,7 @@
 
 void Server::join(std::string buffer, int fd)
 {
+	std::cout<<"JOIN BUFFER BEFORE PARSING: *"<<buffer<<"*\n";
 	std::vector<std::string> my_vec;
 	unsigned int i = 0;
 
@@ -20,14 +21,14 @@ void Server::join(std::string buffer, int fd)
 	i = 0;
 	while (my_vec.size() > i)
 	{
-		if (my_vec[i][0] != '#' && my_vec[i][0] != '&')
+		if (my_vec[i][0] != '#')
 		{
 			std::cerr << "\033[1;91mError couldn't connect the channel..\033[0m" << std::endl;
 			continue;
 		}
 		/* Channel creation as much as channel size.*/
 
-		int flag = 0;
+		int flag = 0; //admin check flag 1 user flag 0 admin
 		unsigned int idx = 0;
 		while(idx < channels_.size())
 		{
@@ -36,7 +37,7 @@ void Server::join(std::string buffer, int fd)
 			idx++;
 		}
 
-		if (flag == 0)
+		if (flag == 0) // create channel you are the admin
 		{
 			Channel c(my_vec[i]);
 
@@ -48,16 +49,23 @@ void Server::join(std::string buffer, int fd)
 			std::string b = ":" + this->client_ret(fd)->getPrefixName() + " JOIN " + my_vec[i] + "\r\n";
 			send(fd, b.c_str(), b.size(), 0);
 		}
-		else
+		else //channel already exist
 		{
 			idx = 0;
 			while(idx < channels_.size())
 			{
 				if (channels_[idx].getchannelName() == my_vec[i])
 				{
-					channels_[idx]._clientsFd.push_back(fd);
-					channels_[idx].setClientCount(channels_[idx].getchannelUserCount() + 1);
-					std::cout << "\033[1;92mAdmin_fd : \033[0m" << channels_[idx].getchannelAdminFd() << std::endl;
+					if(channels_[idx].l == true && channels_[idx].getChannelLimit() <= channels_[idx].getchannelUserCount()) //l user limit
+					{
+						std::cout<<"CHANNEL IS FULL, TRY ANOTHER TIME OR CONTACT WITH ADMIN!\n";
+					}
+					else
+					{
+						channels_[idx]._clientsFd.push_back(fd);
+						channels_[idx].setClientCount(channels_[idx].getchannelUserCount() + 1);
+						std::cout << "\033[1;92mAdmin_fd : \033[0m" << channels_[idx].getchannelAdminFd() << std::endl;
+					}
 				}
 				idx++;
 			}
@@ -67,7 +75,7 @@ void Server::join(std::string buffer, int fd)
 		this->flag = 1; // two /server localhost 4242.
 		unsigned int j = 0;
 		int	fdTemp;
-		while (j < channels_.size() && channels_[j].getchannelName() == my_vec[0])
+		while (j < channels_.size() && channels_[j].getchannelName() == my_vec[0]) //what is this while ???
 		{
 			unsigned int k = 0;
 			while (k < channels_[j]._clientsFd.size())
@@ -85,6 +93,6 @@ void Server::join(std::string buffer, int fd)
 		}
 		i++;
 	}
-	std::cerr << "\033[1;96mNumber of channel:\033[0m" << this->channels_.size() << std::endl;
+	std::cerr << "\033[1;96mNumber of channels:\033[0m" << this->channels_.size() << std::endl;
 	buffer.clear();
 }
