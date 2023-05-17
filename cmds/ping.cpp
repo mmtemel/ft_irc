@@ -15,6 +15,9 @@ void Server::ping(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
-	std::string b = ":" + this->client_ret(fd)->getPrefixName() + " PONG " + my_vec[1] + "\r\n";
-	send(fd, b.c_str(), b.size(), 0);
+	if (my_vec.size() > 0)
+	{
+		std::string b = ":" + this->client_ret(fd)->getPrefixName() + " PONG " + my_vec[0] + "\r\n";
+		send(fd, b.c_str(), b.size(), 0);
+	}
 }

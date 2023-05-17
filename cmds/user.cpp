@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:14:48 by mtemel            #+#    #+#             */
-/*   Updated: 2023/05/17 13:31:39 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 14:07:06 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,10 @@ void Server::user(std::string buffer, int fd)
 		quit("NICK IS ALREADY IN USE!", fd);
 	}
 	my_vec.clear();
-	// std::vector<Client>::iterator ite = this->clients_.end();
-	// for(std::vector<Client>::iterator it = this->clients_.begin(); it != ite; it++)
-	// {
-	// 	std::cout<<"class_attr:"<<(*it).getFd()<<","<<(*it).getUserName()<<","<<(*it).getHostName()<<",";
-	// 	std::cout<<(*it).getServername()<<","<<(*it).getReelName()<<","<<(*it).getNickName()<<","<<std::endl;
-	// }
-	// std::cout<<"USER sonu geldi"<<std::endl;
+	std::vector<Client>::iterator ite = this->clients_.end();
+	for(std::vector<Client>::iterator it = this->clients_.begin(); it != ite; it++)
+	{
+		std::cout<<"class_attr:"<<(*it).getFd()<<","<<(*it).getUserName()<<","<<(*it).getHostName()<<",";
+		std::cout<<(*it).getServername()<<","<<(*it).getReelName()<<","<<(*it).getNickName()<<","<<std::endl;
+	}
 }

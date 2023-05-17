@@ -37,7 +37,6 @@ class Server
 		int					new_socket;
 		int					server_fd;
 		struct sockaddr_in	address;
-		// std::string			buffer;
 		std::string			temp_nick;
 		int					user_count;
 

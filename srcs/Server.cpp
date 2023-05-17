@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/23 22:16:32 by yasinsensoy       #+#    #+#             */
-/*   Updated: 2023/05/17 13:36:48 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 13:51:51 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,11 @@ Server::~Server()
 
 void  Server::appointment(int argc, char **argv)
 {
-	// (void)argc;(void)argv;
 	if (argc != 3)
 	{
 		std::cerr << "Arg Error." << std::endl;
 		exit(1);
 	}
-	
-	// this->my_port = 9898;
-	// this->my_password = "1234";
 	
 	this->my_port = std::atoi(argv[1]);
 	this->my_password = argv[2];
@@ -80,17 +76,13 @@ void	Server::loop()
 			std::cout << "poll fail" << std::endl;
 		for (size_t i = 0 ; i <  pollfds.size() ; i++)
 		{
-			// std::cout <<"pollfds[0] "<<pollfds[0].fd<<std::endl;
 			if (pollfds[i].revents & POLLHUP)
 			{
-				// std::cout <<"POLLHUP"<<std::endl;
 				quit("Disconnected ()", pollfds[i].fd);
 				break;
 			}
 			if (pollfds[i].revents & POLLIN)
 			{
-				// std::cout <<"POLLIN"<<std::endl;
-				// if (pollfds[i].fd == pollfds[0].fd)
 				if (pollfds[i].fd == pollfds[0].fd)
 				{
 					newClient();
@@ -104,7 +96,6 @@ void	Server::loop()
 
 void	Server::newClient()
 {
-	// buffer.clear();
 	int	addr_len = sizeof(address);
 	this->new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t *)&addr_len);
 	// std::cout << "New socket: " << this->new_socket << std::endl;
