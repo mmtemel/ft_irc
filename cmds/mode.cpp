@@ -4,8 +4,8 @@
 
 void Server::mode(std::string buffer, int fd)
 {
-	std::cout<<"\033[1;93mMode func received buff: *"<<buffer<<"*\033[0m\n";
-	(void)fd;
+	std::cout<<"\033[1;93mMODE BUFFER: *"<<buffer<<"*\033[0m\n";
+	// (void)fd;
 	std::vector<std::string> my_vec;
 	std::string command = "";
 	unsigned int i = 0;

@@ -16,6 +16,7 @@ class Client
 		std::string realname;
 		std::string hostname;
 		std::string servername;
+		std::string password;
 	public:
 		Client(int fd, std::string username,std::string hostname, std::string servername, std::string realname, std::string nickname);
 		Client() {};
@@ -30,6 +31,8 @@ class Client
 		std::string getReelName() const { return (this->realname); }
 		std::string getHostName() const { return (this->hostname); }
 		std::string getServername() const { return (this->servername); }
+		std::string getPassword() const { return (this->password); }
+		std::string getPrefixName();
 
 		// Setter
 		void setStatus(int status) {this->status = status; };
@@ -38,7 +41,7 @@ class Client
 		void setRealName(std::string const &Realname) { this->realname = Realname; }
 		void setHostName(std::string const &Hostname) { this->hostname = Hostname; }
 		void setServername(std::string const &Servername) { this->servername = Servername; }
-		std::string getPrefixName();
+		void setPassword(std::string const &Password) { this->password = Password; }
 };
 
 #endif

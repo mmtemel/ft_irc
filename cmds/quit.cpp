@@ -15,7 +15,7 @@ void Server::quit(std::string str, int fd)
 			{
 				if(fd == pollfds[i].fd)
 				{
-					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT " + str + "\r\n";
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT :Leaving " + str + "\r\n";
 					send(fd, b.c_str(), b.size(), 0);
 					close(pollfds[i].fd);
 					pollfds.erase(pollfds.begin()+i);
@@ -26,6 +26,19 @@ void Server::quit(std::string str, int fd)
 				if(fd == clients_[i].getFd())
 				{
 					clients_.erase(clients_.begin()+i);
+				}
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < pollfds.size(); i++)
+			{
+				if(fd == pollfds[i].fd)
+				{
+					std::string b = ":" + this->client_ret(fd)->getPrefixName() + " QUIT :Leaving " + str + "\r\n";
+					send(fd, b.c_str(), b.size(), 0);
+					close(pollfds[i].fd);
+					pollfds.erase(pollfds.begin()+i);
 				}
 			}
 		}

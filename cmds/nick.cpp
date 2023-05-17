@@ -11,7 +11,7 @@ void Server::nick_change(std::string buffer, int fd)
 	if (this->client_ret(fd) && !this->client_nick_check(command))
 	{
 		std::cout << "Will change the nick fd: *" << fd << "*" <<std::endl;
-		std::string b = ":" + this->client_ret(fd)->getNickName()+"!localhost NICK "+command+"\r\n";
+		std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NICK "+command+"\r\n";
 		send(fd, b.c_str(), b.size(), 0);
 		this->client_ret(fd)->setNickName(command);
 		buffer.clear();
@@ -19,7 +19,7 @@ void Server::nick_change(std::string buffer, int fd)
 	else
 	{
 		std::cout << "\033[1;92mThere is some user has the same nickname or user doesn't exist!\033[0m" << std::endl;
-		std::string b = ":" + this->client_ret(fd)->getPrefixName()+"NICK IS ALREADY IN USE \r\n";
+		std::string b = ":" + this->client_ret(fd)->getPrefixName()+" NICK IS ALREADY IN USE \r\n";
 		send(fd, b.c_str(), b.size(), 0);
 	}
 }

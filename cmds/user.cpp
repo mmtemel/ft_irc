@@ -6,7 +6,7 @@
 /*   By: mtemel <mtemel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 19:14:48 by mtemel            #+#    #+#             */
-/*   Updated: 2023/05/16 23:40:41 by mtemel           ###   ########.fr       */
+/*   Updated: 2023/05/17 03:17:58 by mtemel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,26 @@ void Server::user(std::string buffer, int fd)
 	if (my_vec.size() > 3 && this->client_nick_check(temp_nick) == 0)
 	{
 			Client c(fd,my_vec[0],my_vec[1],my_vec[2],my_vec[3],this->temp_nick);
+			c.setPassword(this->pass_fd[fd]);
 			this->clients_.push_back(c);
 			std::cout<<"\033[1;92mNEW USER CREATED AND ADDED TO THE VEC!\033[0m\n";
+			if(c.getPassword() != this->my_password)
+			{
+				std::cout<<"USER: WRONG PASSWORD!\n";
+				quit("USER: WRONG PASSWORD!", fd);
+			}
 	}
 	else if (my_vec.size() < 4)
+	{
 		std::cout<<"USER: NOT ENOUGH ARG!\n";
+		quit("USER: NOT ENOUGH ARG!", fd);
+	}
 	else if (this->client_nick_check(temp_nick) == 1 && my_vec.size() > 3)
 	{
 		std::cout<<"NICK IS ALREADY IN USE!\n";
 		Client c(fd,my_vec[0],my_vec[1],my_vec[2],my_vec[3],this->temp_nick);
 		this->clients_.push_back(c);
-		quit("Same nick, change yours!", fd);
+		quit("NICK IS ALREADY IN USE!", fd);
 	}
 	my_vec.clear();
 	std::vector<Client>::iterator ite = this->clients_.end();

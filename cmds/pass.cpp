@@ -15,10 +15,14 @@ void Server::pass(std::string buffer, int fd)
 			i++;
 		my_vec.push_back(command);
 	}
+	if (my_vec.size()>0)
+	{
+		this->pass_fd[fd] = my_vec[0];
+	}
 	if (my_vec.empty() || my_vec[0] != this->my_password)
 	{
 		std::cerr << "\033[1;91mError: Password Problems...!\033[0m" << std::endl;
-		quit("WRONG PASS", fd);
+		// quit("WRONG PASS", fd);
 	}
 	else
 		std::cout << "\033[1;92mRight: Pass Command\033[0m" << std::endl;
